@@ -1,6 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId
 // we want to import our model once we start using mongoose, but let's just move our server code here
-// const Todos = require('../models/todos-thingy-update')
+const Todos = require('../models/todos')
 
 class TodosController {
 
