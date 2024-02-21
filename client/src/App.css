@@ -1,0 +1,40 @@
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
+ul {
+  list-style-type: none
+}
+
+form {
+  margin: 20px auto 20px auto;
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+}
+
+form > * {
+  margin: 10px;
+  height: 5vh;
+}
+
+.todo-container {
+  display: flex;
+  justify-content: center;
+}
+
+.todo-li {
+  border: 2px solid grey;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  width: 70vw;
+}
+
+.todo-button {
+  margin: 5px
+}
+
