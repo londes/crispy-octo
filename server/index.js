@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose')
+mongoose.set('debug', true)
 
 // default to 4040 unless there is something specified in our process.env file
 const port = process.env.PORT || 4040
@@ -7,10 +9,10 @@ const port = process.env.PORT || 4040
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
-// const mongoose = require('mongoose')
-
 // import our routes
-// we will do this later, for now we want a basic server
+const todoRoutes = require('./routes/todosRoutes')
+
+app.use('/todos', todoRoutes)
 
 let DB=[]
 
