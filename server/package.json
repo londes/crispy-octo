@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js | mongod --config /System/Volumes/Data/opt/homebrew/etc/mongod.conf | mongosh"
+    "dev": "mongod --config /System/Volumes/Data/opt/homebrew/etc/mongod.conf | mongosh | nodemon index.js"
   },
   "keywords": [],
   "author": "",

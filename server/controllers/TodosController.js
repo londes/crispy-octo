@@ -5,8 +5,13 @@ const Todos = require('../models/todos')
 class TodosController {
 
     async getAll(req, res) {
-        console.log('get all')
-        res.send({ok: true, data: `get all`})
+        try {
+            // const todos = await Todos.find({todo: 'lulling'})
+            // res.send(todos)
+            res.send(`todos`)
+        } catch (e) {
+            res.send(e)
+        }
     }
 
     async add(req, res) {
