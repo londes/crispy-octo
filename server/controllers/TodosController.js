@@ -6,27 +6,57 @@ class TodosController {
 
     async getAll(req, res) {
         try {
-            // const todos = await Todos.find({todo: 'lulling'})
-            // res.send(todos)
-            res.send(`todos`)
+            let todos = await Todos.find({})
+            res.send(todos)
         } catch (e) {
             res.send(e)
         }
     }
 
     async add(req, res) {
-        console.log('add')
-        res.send({ok: true, data: `add smth`})
+        try {
+            let match = await Todos.find({todo: req.body.todo})
+            console.log(match)
+            match.length > 0
+                ? res.send({ok: true, data: `WARNING: todo ${req.body.todo} already exists, nothing added`})
+                : (async function addTodo() {
+                    await Todos.create({todo: req.body.todo})
+                    res.send({ok: true, data: `todo ${req.body.todo} successfully added`})
+                })()
+        } catch (e) {
+            res.send(e)
+        }
     }
 
     async delete(req, res) {
-        console.log('delete')
-        res.send({ok: true, data: `delete smth`})
+        try {
+            let match = await Todos.find({todo: req.body.todo})
+            console.log(match)
+            if (match.length > 0) {
+                await Todos.deleteOne({todo: req.body.todo})
+                res.send({ok: true, data: `todo ${req.body.todo} successfully deleted`})
+            } else {
+                res.send({ok: true, data: `WARNING: todo ${req.body.todo} not found, nothing deleted`})
+            }
+        } catch(e) {
+            res.send(e)
+        }
     }
 
     async update(req, res) {
-        console.log('update')
-        res.send({ok: true, data: `update smth`})
+        let {todo, complete} = req.body
+        try {
+            let match = await Todos.findOne({todo: todo})
+            console.log(match)
+            !!match
+                ? (async function updateTodo(){
+                    await Todos.updateOne({todo: todo}, {complete: complete})
+                    res.send({ok: true, data: `todo ${todo} successfully updated`})
+                })()
+                : res.send({ok: true, data: `WARNING: todo ${req.body.todo} not found, nothing updated`})
+        } catch(e) {
+            res.send(e)
+        }
     }
 }
 
