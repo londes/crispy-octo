@@ -1,6 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+// import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { URL } from './config'
+
 import TodoList from './components/TodoList';
 
 function App() {
@@ -33,13 +36,19 @@ function App() {
   }
 
   let removeHandler = e => {
+    let removeTarget = {}
     let removeUpdated = todoItems.filter((task, idx) => {
-      if (!(e.target.attributes.idx.value == idx))
+      if (!(e.target.attributes.idx.value == idx)) {
+        removeTarget = task
         return true
+      }
     })
-    console.log(removeUpdated)
-    setTodoItems(removeUpdated)
+    postToTodos('/delete', removeTarget).then(()=>setTodoItems(removeUpdated))
   }
+
+  useEffect(() => {
+    fetchTodos().then(todos => setTodoItems(todos))
+  }, [])
 
   return (
     <div className="App">
@@ -54,6 +63,31 @@ function App() {
       </div>
     </div>
   );
+}
+
+// set up our requests to the back-end
+
+async function fetchTodos() {
+  const res = await fetch(`${URL}/todos`, [])
+  if (!res.ok) {
+    const message = 'error fetching todos'
+    throw new Error(message)
+  }
+  const todos = await res.json()
+  return todos
+}
+
+async function postToTodos(url='', data = {}) {
+  console.log(data)
+  const res = await fetch(`${URL}/todos${url}`, {
+    method:"POST",
+    mode:"cors",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": 'application/json'
+    }
+  })
+  return res.json()
 }
 
 export default App;

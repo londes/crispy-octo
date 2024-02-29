@@ -9,6 +9,7 @@ mongoose.set('debug', true)
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(require('cors')())
 
 async function connecting() {
     try {
