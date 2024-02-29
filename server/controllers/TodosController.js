@@ -44,13 +44,13 @@ class TodosController {
     }
 
     async update(req, res) {
-        let {todo, complete} = req.body
+        let {todo, completed} = req.body
         try {
             let match = await Todos.findOne({todo: todo})
             console.log(match)
             !!match
                 ? (async function updateTodo(){
-                    await Todos.updateOne({todo: todo}, {complete: complete})
+                    await Todos.updateOne({todo: todo}, {completed: completed})
                     res.send({ok: true, data: `todo ${todo} successfully updated`})
                 })()
                 : res.send({ok: true, data: `WARNING: todo ${req.body.todo} not found, nothing updated`})

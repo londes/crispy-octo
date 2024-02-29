@@ -10,37 +10,46 @@ function App() {
 
   let [todoItems, setTodoItems] = useState([])
   let [task, setTask] = useState({
-    title: '',
+    todo: '',
     completed: false,
   })
 
   let changeHandler = e => {
-    setTask({...task, title: e.target.value})
+    setTask({...task, todo: e.target.value})
   }
   
   let submitHandler = e => {
     e.preventDefault()
-    if (task.title !== '') {
-      setTodoItems([...todoItems, task])
-      setTask({...task, title: ''})
+    if (task.todo !== '') {
+      postToTodos('/add', task).then(()=>{
+        setTodoItems([...todoItems, task])
+        setTask({...task, todo: ''})
+      })
     }
   }
 
   let completeHandler = e => {
+    let updated = {}
     let completeUpdated = todoItems.map((task, idx) => {
-      if (idx == e.target.attributes.idx.value)
+      if (idx == e.target.attributes.idx.value) {
         task.completed = !task.completed
+        updated = task
+      }
       return task
     })
-    setTodoItems(completeUpdated)
+    postToTodos('/update', updated).then(() => setTodoItems(completeUpdated))
   }
 
+  // NOT WORKING ANY MORE
   let removeHandler = e => {
     let removeTarget = {}
+    console.log(e.target.attributes.idx.value)
     let removeUpdated = todoItems.filter((task, idx) => {
       if (!(e.target.attributes.idx.value == idx)) {
-        removeTarget = task
         return true
+      } else {
+        removeTarget = task
+        return false
       }
     })
     postToTodos('/delete', removeTarget).then(()=>setTodoItems(removeUpdated))
@@ -54,7 +63,7 @@ function App() {
     <div className="App">
       <div className="input-container">
         <form onSubmit={submitHandler}>
-          <input placeholder='todo' onChange={changeHandler} value={task.title}/>
+          <input placeholder='todo' onChange={changeHandler} value={task.todo}/>
           <button>submit</button>
         </form>
       </div>
