@@ -9,6 +9,7 @@ class TodosController {
             let todos = await Todos.find({})
             res.send(todos)
         } catch (e) {
+            console.log(e)
             res.send(e)
         }
     }

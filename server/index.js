@@ -7,13 +7,16 @@ const todosRoutes = require('./routes/todosRoutes')
 
 mongoose.set('debug', true)
 
+require('dotenv').config()
+
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(require('cors')())
 
 async function connecting() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1/todo')
+        // await mongoose.connect('mongodb://127.0.0.1/todo')
+        await mongoose.connect(`mongodb+srv://wilpur-todo:${process.env.MONGO_PW}@todo.wauvl2d.mongodb.net/todo?retryWrites=true&w=majority&appName=Todo`)
         console.log(`connected to the todos db yee`)
     }
     catch (error) {
@@ -23,6 +26,12 @@ async function connecting() {
 
 app.use('/todos', todosRoutes)
 
+// part of our routes, but this points to our built front-end
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+
+// connect
 connecting().then(() => {
     app.listen(port, () => console.log(`server running on port ${port}`))
 })
