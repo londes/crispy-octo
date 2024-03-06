@@ -14,6 +14,9 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(require('cors')())
 
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 async function connecting() {
     try {
         // await mongoose.connect('mongodb://127.0.0.1/todo')
