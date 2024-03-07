@@ -3,12 +3,13 @@ const path = require('path')
 const app = express()
 const port = process.env.PORT || 4040
 
+require('dotenv').config()
+
 const mongoose = require('mongoose')
+
 const todosRoutes = require('./routes/todosRoutes')
 
 mongoose.set('debug', true)
-
-require('dotenv').config()
 
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
@@ -25,6 +26,7 @@ async function connecting() {
     }
     catch (error) {
         console.log(`ERROR: could not connect to db. please ensure it's running`)
+        console.log(error)
     }
 }
 
