@@ -40,8 +40,9 @@ form > * {
 }
 
 .todo-button-container {
-  flex: 1;
+  flex: 3;
   display: flex;
+  justify-content: flex-end;
 }
 
 .todo-button {

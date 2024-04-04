@@ -1,9 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react'
 
 import TodoList from './components/TodoList';
-
 import { fetchTodos, postToTodos } from './services/requests.js'
 
 function App() {
@@ -17,7 +15,10 @@ function App() {
   })
 
   let changeHandler = e => {
-    setTask({...task, todo: e.target.value})
+    console.log(e.target.attributes.indic.value)
+    console.log(e.target.value)
+    setTask({...task, [e.target.attributes.indic.value]: e.target.value})
+    console.log(task.editValue)
   }
   
   let submitHandler = e => {
@@ -56,14 +57,19 @@ function App() {
   }
 
   let updateHandler = e => {
+    let pressType = e.target.attributes.indic.value
     let edited = {}
-    let updateEdited = todoItems.map((task, idx) => {
+
+    let updateEdited = todoItems.map((todo, idx) => {
       if (idx == e.target.attributes.idx.value) {
-        task.editing = !task.editing
-        edited = task
+        todo.editing = !todo.editing
+        if (pressType == 'done')
+          todo.todo = task.editValue
+        edited = todo
       }
-      return task
+      return todo
     })
+    console.log(edited)
     postToTodos('/update', edited).then(()=>setTodoItems(updateEdited))
   }
 
@@ -75,12 +81,12 @@ function App() {
     <div className="App">
       <div className="input-container">
         <form onSubmit={submitHandler}>
-          <input placeholder='todo' onChange={changeHandler} value={task.todo}/>
+          <input indic='todo' placeholder='todo' onChange={changeHandler} value={task.todo}/>
           <button>submit</button>
         </form>
       </div>
       <div className="todo-container">
-        <TodoList todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler}/>
+        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler}/>
       </div>
     </div>
   );
