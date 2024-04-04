@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useState, useEffect } from 'react'
-// import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { URL } from './config'
 
 import TodoList from './components/TodoList';
+
+import { fetchTodos, postToTodos } from './services/requests.js'
 
 function App() {
 
@@ -12,6 +12,8 @@ function App() {
   let [task, setTask] = useState({
     todo: '',
     completed: false,
+    editing: false,
+    editValue: ''
   })
 
   let changeHandler = e => {
@@ -40,10 +42,8 @@ function App() {
     postToTodos('/update', updated).then(() => setTodoItems(completeUpdated))
   }
 
-  // NOT WORKING ANY MORE
   let removeHandler = e => {
     let removeTarget = {}
-    console.log(e.target.attributes.idx.value)
     let removeUpdated = todoItems.filter((task, idx) => {
       if (!(e.target.attributes.idx.value == idx)) {
         return true
@@ -53,6 +53,18 @@ function App() {
       }
     })
     postToTodos('/delete', removeTarget).then(()=>setTodoItems(removeUpdated))
+  }
+
+  let updateHandler = e => {
+    let edited = {}
+    let updateEdited = todoItems.map((task, idx) => {
+      if (idx == e.target.attributes.idx.value) {
+        task.editing = !task.editing
+        edited = task
+      }
+      return task
+    })
+    postToTodos('/update', edited).then(()=>setTodoItems(updateEdited))
   }
 
   useEffect(() => {
@@ -68,35 +80,10 @@ function App() {
         </form>
       </div>
       <div className="todo-container">
-        <TodoList todos={todoItems} complete={completeHandler} remove={removeHandler}/>
+        <TodoList todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler}/>
       </div>
     </div>
   );
-}
-
-// set up our requests to the back-end
-
-async function fetchTodos() {
-  const res = await fetch(`${URL}/todos`, [])
-  if (!res.ok) {
-    const message = 'error fetching todos'
-    throw new Error(message)
-  }
-  const todos = await res.json()
-  return todos
-}
-
-async function postToTodos(url='', data = {}) {
-  console.log(data)
-  const res = await fetch(`${URL}/todos${url}`, {
-    method:"POST",
-    mode:"cors",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": 'application/json'
-    }
-  })
-  return res.json()
 }
 
 export default App;

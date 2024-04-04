@@ -17,7 +17,6 @@ class TodosController {
     async add(req, res) {
         try {
             let match = await Todos.find({todo: req.body.todo})
-            console.log(match)
             match.length > 0
                 ? res.send({ok: true, data: `WARNING: todo ${req.body.todo} already exists, nothing added`})
                 : (async function addTodo() {
@@ -48,7 +47,6 @@ class TodosController {
         let {todo, completed} = req.body
         try {
             let match = await Todos.findOne({todo: todo})
-            console.log(match)
             !!match
                 ? (async function updateTodo(){
                     await Todos.updateOne({todo: todo}, {completed: completed})
