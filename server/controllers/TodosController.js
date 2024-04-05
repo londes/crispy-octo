@@ -44,14 +44,17 @@ class TodosController {
     }
 
     async update(req, res) {
-        let {todo, completed} = req.body
+        // lots to fix here I think...
+        console.log('in our update')
+        let { _id } = req.body
+        let updateObj = {}
+        for (let update in req.body) 
+            updateObj = {...updateObj, [update]: req.body[update]}
         try {
-            let match = await Todos.findOne({todo: todo})
+            let match = await Todos.findOneAndUpdate({_id: _id}, {$set: updateObj})
+            console.log(match)
             !!match
-                ? (async function updateTodo(){
-                    await Todos.updateOne({todo: todo}, {completed: completed})
-                    res.send({ok: true, data: `todo ${todo} successfully updated`})
-                })()
+                ? res.send({ok: true, data: `todo ${todo} successfully updated`})
                 : res.send({ok: true, data: `WARNING: todo ${req.body.todo} not found, nothing updated`})
         } catch(e) {
             res.send(e)

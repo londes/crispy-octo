@@ -15,10 +15,7 @@ function App() {
   })
 
   let changeHandler = e => {
-    console.log(e.target.attributes.indic.value)
-    console.log(e.target.value)
     setTask({...task, [e.target.attributes.indic.value]: e.target.value})
-    console.log(task.editValue)
   }
   
   let submitHandler = e => {
