@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function TodoList({ todos, complete, remove, update, change }) {
+export default function TodoList({ todos, complete, remove, update, change, dragStart, dragEnter, dragEnd }) {
   return (
     <ul>
-        {todos.map((todo, idx) => <li className='todo-li' key={todo._id}> 
+        {todos.map((todo, idx) => <li className='todo-li' key={todo._id} index={idx} draggable onDragStart={(e) => dragStart(e, idx)} onDragEnter={(e) => dragEnter(e, idx)} onDragEnd={dragEnd}> 
             { todo.editing 
                 ? <>
                         <input className='todo-todo' indic='editValue' style={todo.completed ? styles.complete : styles.incomplete} onChange={change} placeholder={todo.todo} value={todo.editValue} />

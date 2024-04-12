@@ -44,7 +44,6 @@ class TodosController {
     }
 
     async update(req, res) {
-        // lots to fix here I think...
         console.log('in our update')
         let { _id } = req.body
         let updateObj = {}

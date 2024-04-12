@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import TodoList from './components/TodoList';
 import { fetchTodos, postToTodos } from './services/requests.js'
@@ -70,6 +70,30 @@ function App() {
     postToTodos('/update', edited).then(()=>setTodoItems(updateEdited))
   }
 
+  // dragging functionality
+
+  // save reference for dragged item
+  let dragItem = useRef(null)
+  let dragOverItem = useRef(null)
+
+  // handle sorting
+  let handleSort = () => {
+    console.log('in our handle sort')
+    let _todos = [...todoItems]
+    let draggedTodo = _todos.splice(dragItem.current, 1)[0]
+    console.log(draggedTodo)
+    _todos.splice(dragOverItem.current, 0, draggedTodo)
+    console.log(_todos)
+    setTodoItems(_todos)
+    console.log(todoItems)
+    dragItem.current = null
+    dragOverItem.current = null
+  }
+
+  // drag handlers
+  let onDragStart = (e, idx) => dragItem.current = idx
+  let onDragEnter = (e, idx) => dragOverItem.current = idx
+
   useEffect(() => {
     fetchTodos().then(todos => setTodoItems(todos))
   }, [])
@@ -83,7 +107,7 @@ function App() {
         </form>
       </div>
       <div className="todo-container">
-        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler}/>
+        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={handleSort}/>
       </div>
     </div>
   );
