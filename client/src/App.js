@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState, useEffect, useRef } from 'react'
 
 import TodoList from './components/TodoList';
-import { fetchTodos, postToTodos } from './services/requests.js'
+import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/requests.js'
 
 function App() {
 
@@ -11,7 +11,7 @@ function App() {
     todo: '',
     completed: false,
     editing: false,
-    editValue: ''
+    editValue: '',
   })
 
   let changeHandler = e => {
@@ -21,7 +21,7 @@ function App() {
   let submitHandler = e => {
     e.preventDefault()
     if (task.todo !== '') {
-      postToTodos('/add', task).then(()=>{
+      addTodo(task).then(()=>{
         setTodoItems([...todoItems, task])
         setTask({...task, todo: ''})
       })
@@ -37,7 +37,7 @@ function App() {
       }
       return task
     })
-    postToTodos('/update', updated).then(() => setTodoItems(completeUpdated))
+    updateTodos([updated]).then(() => setTodoItems(completeUpdated))
   }
 
   let removeHandler = e => {
@@ -50,10 +50,10 @@ function App() {
         return false
       }
     })
-    postToTodos('/delete', removeTarget).then(()=>setTodoItems(removeUpdated))
+    deleteTodo(removeTarget).then(()=>setTodoItems(removeUpdated))
   }
 
-  let updateHandler = e => {
+  let editHandler = e => {
     let pressType = e.target.attributes.indic.value
     let edited = {}
 
@@ -66,8 +66,7 @@ function App() {
       }
       return todo
     })
-    console.log(edited)
-    postToTodos('/update', edited).then(()=>setTodoItems(updateEdited))
+    updateTodos([edited]).then(()=>setTodoItems(updateEdited))
   }
 
   // dragging functionality
@@ -78,16 +77,18 @@ function App() {
 
   // handle sorting
   let handleSort = () => {
-    console.log('in our handle sort')
+    // copy to avoid accidentally mutating todoItems
     let _todos = [...todoItems]
+    // remove the dragged item
     let draggedTodo = _todos.splice(dragItem.current, 1)[0]
-    console.log(draggedTodo)
+    // insert dragged item at hover location 
     _todos.splice(dragOverItem.current, 0, draggedTodo)
-    console.log(_todos)
+    // update todoItems
     setTodoItems(_todos)
-    console.log(todoItems)
+    // reset our references for a new drag
     dragItem.current = null
     dragOverItem.current = null
+    console.log(_todos)
   }
 
   // drag handlers
@@ -107,7 +108,7 @@ function App() {
         </form>
       </div>
       <div className="todo-container">
-        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} update={updateHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={handleSort}/>
+        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={handleSort}/>
       </div>
     </div>
   );
