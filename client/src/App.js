@@ -12,6 +12,7 @@ function App() {
     completed: false,
     editing: false,
     editValue: '',
+    index: null
   })
 
   let changeHandler = e => {
@@ -21,6 +22,8 @@ function App() {
   let submitHandler = e => {
     e.preventDefault()
     if (task.todo !== '') {
+      //provide incoming task's index value which is required
+      task.index = todoItems.length
       addTodo(task).then(()=>{
         setTodoItems([...todoItems, task])
         setTask({...task, todo: ''})
@@ -69,34 +72,46 @@ function App() {
     updateTodos([edited]).then(()=>setTodoItems(updateEdited))
   }
 
-  // dragging functionality
+  // start -- dragging functionality
 
   // save reference for dragged item
   let dragItem = useRef(null)
   let dragOverItem = useRef(null)
 
-  // handle sorting
-  let handleSort = () => {
+  // handle sorting on drag and drop
+  let dragSortHandler = () => {
     // copy to avoid accidentally mutating todoItems
     let _todos = [...todoItems]
+    // create a new arr to store items that moved
+    let updated = []
     // remove the dragged item
     let draggedTodo = _todos.splice(dragItem.current, 1)[0]
     // insert dragged item at hover location 
     _todos.splice(dragOverItem.current, 0, draggedTodo)
-    // update todoItems
-    setTodoItems(_todos)
+    // push all of the items which changed location to updated
+    _todos.forEach((ele, idx) => {
+      if (ele.index !== idx) {
+        ele.index = idx
+        updated.push(ele)
+      }
+    })    
     // reset our references for a new drag
     dragItem.current = null
     dragOverItem.current = null
     console.log(_todos)
+    console.log(updated)
+    // update with our altered items, and update todoItems locally
+    updateTodos(updated).then(()=>setTodoItems(_todos))
   }
 
   // drag handlers
   let onDragStart = (e, idx) => dragItem.current = idx
   let onDragEnter = (e, idx) => dragOverItem.current = idx
 
+  // end -- dragging functionality
+
   useEffect(() => {
-    fetchTodos().then(todos => setTodoItems(todos))
+    fetchTodos().then(todos => setTodoItems(todos.sort((a,b) => a.index - b.index)))
   }, [])
 
   return (
@@ -108,7 +123,7 @@ function App() {
         </form>
       </div>
       <div className="todo-container">
-        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={handleSort}/>
+        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>
       </div>
     </div>
   );
