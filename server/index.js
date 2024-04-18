@@ -8,6 +8,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 
 const todosRoutes = require('./routes/todosRoutes')
+const userRoutes = require('./routes/userRoutes')
 
 mongoose.set('debug', true)
 
@@ -31,6 +32,7 @@ async function connecting() {
 }
 
 app.use('/todos', todosRoutes)
+app.use('/user', userRoutes)
 
 // part of our routes, but this points to our built front-end
 app.get('/*', function (req, res) {
