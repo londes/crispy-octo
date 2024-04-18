@@ -39,7 +39,6 @@ class UserController {
         try {
             // destructure request body
             let { username, email, password } = req.body
-            
             // build a query object to search by either username or pw
             let query = {}
             if (email)
@@ -61,21 +60,40 @@ class UserController {
     }
 
     async delete(req, res) {
-
-        console.log('in our delete')
         try {
-            res.send({ok: true, data: `delete`})
+            let { username } = req.body
+            if (!username)
+                res.status(400).send({ok: false, message: `username is required`})
+            let user = await User.findOneAndDelete({ username: username })
+            console.log(user)
+            user 
+                ? res.status(200).send({ok: true, message: `user ${username} removed`})
+                : res.status(404).send({ok: true, message: `user ${username} not found, nothing removed`})
         } catch(e) {
-            res.send(e)
+            console.error(e)
+            res.status(500).send({ok: false, message: 'internal server error during delete'})
         }
     }
 
     async update(req, res) {
-        console.log('in our update')
+        // should consider implementing JWT tokens and further security here as updating is a sensitive operation
         try {
-            res.send({ok: true, data: `update`})
+            // grab id from our request
+            let { _id } = req.body
+            // if there's no _id, we can't update
+            if ( !_id )
+                return res.status(400).send({ ok: false, message: `no id found for user update, cannot update`})
+            // create a new object with all of our updates, and remove _id which we don't want here
+            let updateObj = {...req.body}
+            delete updateObj._id
+            // locate user by ID and update according to new information provided. note that options param {new: true syntax} ensures that an updated username is always returned in our ternary statement if
+            let user = await User.findOneAndUpdate({ _id: _id }, { $set: updateObj }, { new: true })
+            user 
+                ? res.status(200).send({ok: true, message: `user ${user.username} updated`})
+                : res.status(404).send({ok: true, message: `user not found, nothing updated`})
         } catch(e) {
-            res.send(e)
+            console.log(e)
+            res.status(500).send({ok: false, message: 'internal server error during update'})
         }
     }
 }
