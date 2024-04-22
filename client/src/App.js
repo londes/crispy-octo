@@ -5,13 +5,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.js';
 import Login from './views/Login.js';
 import Profile from './views/Profile.js';
-import Todos from './views/Todos.js';
+import Todos from './views/Todos.js'
 
-import TodoList from './components/TodoList';
 import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/requests.js'
 
 function App() {
 
+  let [isLoggedIn, setIsLoggedIn] = useState(false)
   let [todoItems, setTodoItems] = useState([])
   let [task, setTask] = useState({
     todo: '',
@@ -21,14 +21,11 @@ function App() {
     index: null
   })
 
-  let changeHandler = e => {
-    setTask({...task, [e.target.attributes.indic.value]: e.target.value})
-  }
+  let changeHandler = e => setTask({...task, [e.target.attributes.indic.value]: e.target.value})
   
   let submitHandler = e => {
     e.preventDefault()
     if (task.todo !== '') {
-      //provide incoming task's index value which is required
       task.index = todoItems.length
       addTodo(task).then(()=>{
         setTodoItems([...todoItems, task])
@@ -75,7 +72,10 @@ function App() {
       }
       return todo
     })
-    updateTodos([edited]).then(()=>setTodoItems(updateEdited))
+    updateTodos([edited]).then(()=> {
+      setTodoItems(updateEdited)
+      setTask({...task, editValue: ''})
+    })
   }
 
   // start -- dragging functionality
@@ -119,15 +119,14 @@ function App() {
 
   return (
     <div className="App">
-      <div className="input-container">
-        <form onSubmit={submitHandler}>
-          <input indic='todo' placeholder='todo' onChange={changeHandler} value={task.todo}/>
-          <button>submit</button>
-        </form>
-      </div>
-      <div className="todo-container">
-        <TodoList task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>
-      </div>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Todos submit={submitHandler} task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/profile' element={<Profile />}/>
+        </Routes>
+      </Router>
     </div>
   );
 }
