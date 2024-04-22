@@ -36,23 +36,23 @@ function App() {
 
   let completeHandler = e => {
     let updated = {}
-    let completeUpdated = todoItems.map((task, idx) => {
+    let completeUpdated = todoItems.map((todo, idx) => {
       if (idx == e.target.attributes.idx.value) {
-        task.completed = !task.completed
-        updated = task
+        todo.completed = !todo.completed
+        updated = todo
       }
-      return task
+      return todo
     })
     updateTodos([updated]).then(() => setTodoItems(completeUpdated))
   }
 
   let removeHandler = e => {
     let removeTarget = {}
-    let removeUpdated = todoItems.filter((task, idx) => {
+    let removeUpdated = todoItems.filter((todo, idx) => {
       if (!(e.target.attributes.idx.value == idx)) {
         return true
       } else {
-        removeTarget = task
+        removeTarget = todo
         return false
       }
     })

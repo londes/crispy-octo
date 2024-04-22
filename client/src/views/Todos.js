@@ -6,10 +6,10 @@ export default function TodoList({ submit, task, todos, complete, remove, edit, 
         <div className="input-container">
             <form onSubmit={submit}>
                 <input indic='todo' placeholder='todo' onChange={change} value={task.todo}/>
-                <button>submit</button>
+                <button className='todo-button' id='submit-button'>submit</button>
             </form>
         </div>
-        <ul>
+        <ul className="todo-container">
             {todos.map((todo, idx) => <li className='todo-li' key={idx} index={idx} draggable onDragStart={(e) => dragStart(e, idx)} onDragEnter={(e) => dragEnter(e, idx)} onDragEnd={dragEnd} onDragOver={(e)=>e.preventDefault()}> 
                 { todo.editing 
                     ? <>
