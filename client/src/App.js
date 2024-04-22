@@ -1,5 +1,11 @@
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
+import Navbar from './components/Navbar.js';
+import Login from './views/Login.js';
+import Profile from './views/Profile.js';
+import Todos from './views/Todos.js';
 
 import TodoList from './components/TodoList';
 import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/requests.js'
@@ -73,7 +79,6 @@ function App() {
   }
 
   // start -- dragging functionality
-
   // save reference for dragged item
   let dragItem = useRef(null)
   let dragOverItem = useRef(null)
@@ -98,8 +103,6 @@ function App() {
     // reset our references for a new drag
     dragItem.current = null
     dragOverItem.current = null
-    console.log(_todos)
-    console.log(updated)
     // update with our altered items, and update todoItems locally
     updateTodos(updated).then(()=>setTodoItems(_todos))
   }

@@ -1,6 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId
 const mongoose = require('mongoose')
-// we want to import our model once we start using mongoose, but let's just move our server code here
 const Todos = require('../models/todos')
 
 class TodosController {
@@ -16,8 +15,6 @@ class TodosController {
     }
 
     async add(req, res) {
-        console.log('in our add')
-        console.log(req)
         try {
             let match = await Todos.find({todo: req.body.todo})
             match.length > 0
