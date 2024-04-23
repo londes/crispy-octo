@@ -2,31 +2,37 @@ import React, { useState } from 'react'
 
 export default function Login() {
 
-    let [ form, setForm] = useState ({
+    let [ formValues, setFormValues] = useState ({
         username: '',
         password: '',
         password2: '',
-        email: ''
+        email: '',
+        username_email: ''
     })
     let [ registerSelected, setRegisterSelected ] = useState(false)
-    let [ message, setMessage ] = useState('jenqui')
+    let [ message, setMessage ] = useState('')
 
+    let changeHandler = e => setFormValues({...formValues, [e.target.attributes.name.value]: e.target.value})
+
+    let submitHandler = e => {
+        e.preventDefault()
+    }
 
     if (!registerSelected)
         return (
             <div className="login-register-container">
                 <form
-                    onSubmit={()=>{}}
-                    onChange={()=>{}}
+                    onSubmit={submitHandler}
+                    onChange={changeHandler}
                     className="form-container"
-                    autoComplete='off'
+                    autoComplete="off"
                 >
                     <div className="form-item">
-                        <label>Username</label>
-                        <input name="name" />
+                        <label>username or email</label>
+                        <input name="username_email" />
                     </div>
                     <div className="form-item">
-                        <label>Password</label>
+                        <label>password</label>
                         <input name="password" />
                     </div>
                     <button>login</button>
@@ -43,25 +49,25 @@ export default function Login() {
         return (
             <div className="login-register-container">
                 <form
-                    onSubmit={()=>{}}
-                    onChange={()=>{}}
+                    onSubmit={submitHandler}
+                    onChange={changeHandler}
                     className="form-container"
                     autoComplete='off'
                 >
                     <div className="form-item">
                         <label>username</label>
-                        <input name="name" />
+                        <input name="username" />
                     </div>
                     <div className="form-item">
                         <label>email</label>
                         <input name="email" />
                     </div>
                     <div className="form-item">
-                        <label>Password</label>
+                        <label>password</label>
                         <input name="password" />
                     </div>
                     <div className="form-item">
-                        <label>Repeat Password</label>
+                        <label>verify password</label>
                         <input name="password2" />
                     </div>
                     <button>register</button>

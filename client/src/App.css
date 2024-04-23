@@ -60,13 +60,28 @@ form > * {
 form > button {
   width: 10vw;
   margin: auto;
-  height: 3.5vh
+  height: 3.5vh;
+  cursor: pointer
 }
 
 #submit-button {
   margin: auto;
   margin-top: 1vh;
   width: 20vw;
+}
+
+.message {
+  margin: auto
+}
+
+.login-register-text {
+  margin: auto
+}
+
+.register-text {
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .todo-container {
