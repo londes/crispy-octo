@@ -23,12 +23,24 @@ class UserController {
             // check for all fields
             if (!username || !email || !password)
                 return res.status(400).send({ message: "all fields are required" })
-            // create an instance of our User schema object with provided data
-            const user = new User({ username, email, password })
-            // save user to db
-            user.save()
-            const token = jwt.sign({ userId: user._id}, jwt_secret)
-            res.status(201).send({ token })
+            else if (!/^[A-Za-z][A-Za-z0-9]*$/.test(username))
+                return res.status(400).send({message: 'username must contain only letters and numbers'})
+            else if (!/^\S+@\S+\.\S+$/.test(email))
+                return res.status(400).send({message: 'please enter a valid email'})
+            else {
+                let existing = await User.findOne({$or: [{username: username}, {email: email}]})
+                // Schema.find() returns an array, so check if there are any matches
+                if (existing)
+                    return res.status(400).send({message: 'username or email already exists'})
+                else {
+                    // create an instance of our User schema object with provided data
+                    const user = new User({ username, email, password })
+                    // save user to db
+                    user.save()
+                    const token = jwt.sign({ userId: user._id}, jwt_secret)
+                    return res.status(201).send({ token: token, message: 'success, user added. redirecting to todos' })
+                }
+            }
         } catch (e) {
             console.log('error registering user: ', e)
             res.send(e)

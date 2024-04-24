@@ -34,7 +34,6 @@ form {
 form > * {
   /* border: 1px solid green; */
   margin: 1vh;
-  height: 5vh;
 }
 
 .form-item {
@@ -71,6 +70,7 @@ form > button {
 }
 
 .message {
+  /* border: 2px solid green; */
   margin: auto
 }
 

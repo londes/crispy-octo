@@ -7,7 +7,7 @@ import Login from './views/Login.js';
 import Profile from './views/Profile.js';
 import Todos from './views/Todos.js'
 
-import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/requests.js'
+import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/todosRequests.js'
 
 function App() {
 

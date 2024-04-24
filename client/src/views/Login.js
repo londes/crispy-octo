@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { fetchUsers, addUser } from '../services/userRequests'
 
 export default function Login() {
 
@@ -16,6 +17,31 @@ export default function Login() {
 
     let submitHandler = e => {
         e.preventDefault()
+        // handle register
+        let { username, email, password, password2 } = formValues
+        if (registerSelected) {
+            if ( !username || !email || !password || !password2 )
+                setMessage('all fields are required')
+            else if (password !== password2)
+                setMessage('passwords must match')
+            else if (!/^[A-Za-z][A-Za-z0-9]*$/.test(username))
+                setMessage('username must contain only letters and numbers')
+            else if (!/^\S+@\S+\.\S+$/.test(email))
+                setMessage('please enter a valid email')
+            else {
+                // success, send to back-end
+                addUser(formValues).then((res)=>{
+                    res.message ? setMessage(res.message) : setMessage('server error, did not register user. please try again')
+                })
+            }
+        }
+        // handle login
+        else if (!registerSelected) {
+            console.log('login submit')
+        }
+        // throw error
+        else {}
+        // fetchUsers().then(()=>{console.log('fetched')})
     }
 
     if (!registerSelected)
@@ -33,7 +59,7 @@ export default function Login() {
                     </div>
                     <div className="form-item">
                         <label>password</label>
-                        <input name="password" />
+                        <input name="password"/>
                     </div>
                     <button>login</button>
                     <div className="message">
@@ -56,7 +82,7 @@ export default function Login() {
                 >
                     <div className="form-item">
                         <label>username</label>
-                        <input name="username" />
+                        <input name="username"/>
                     </div>
                     <div className="form-item">
                         <label>email</label>
@@ -75,7 +101,7 @@ export default function Login() {
                         <h4>{message}</h4>
                     </div>
                     <div className="login-register-text">
-                        <p>Don't have an account? Please <span className='register-text' onClick={()=>setRegisterSelected(true)}>register</span></p>
+                        <p>Return to <span className='register-text' onClick={()=>setRegisterSelected(false)}>login</span></p>
                     </div>
                 </form>
             </div>
