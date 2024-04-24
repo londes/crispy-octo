@@ -19,26 +19,29 @@ class UserController {
     async register(req, res) {
         try {
             // destructuring our request object
-            let { username, email, password } = req.body
-            // check for all fields
+            let { username, email, password, password2 } = req.body
+            // make all validation checks on the back-end, too
             if (!username || !email || !password)
-                return res.status(400).send({ message: "all fields are required" })
+                return res.status(400).send({ ok: false, message: "all fields are required" })
+            else if (password !== password2)
+                return res.status(400).send({ ok: false, message: "passwords must match" })
             else if (!/^[A-Za-z][A-Za-z0-9]*$/.test(username))
-                return res.status(400).send({message: 'username must contain only letters and numbers'})
+                return res.status(400).send({ ok: false, message: 'username must contain only letters and numbers'})
             else if (!/^\S+@\S+\.\S+$/.test(email))
-                return res.status(400).send({message: 'please enter a valid email'})
+                return res.status(400).send({ ok: false, message: 'please enter a valid email'})
+            // passes all checks
             else {
                 let existing = await User.findOne({$or: [{username: username}, {email: email}]})
-                // Schema.find() returns an array, so check if there are any matches
+                // if there is a user with that username or email
                 if (existing)
-                    return res.status(400).send({message: 'username or email already exists'})
+                    return res.status(400).send({ ok: false, message: 'username or email already exists'})
                 else {
                     // create an instance of our User schema object with provided data
                     const user = new User({ username, email, password })
                     // save user to db
                     user.save()
                     const token = jwt.sign({ userId: user._id}, jwt_secret)
-                    return res.status(201).send({ token: token, message: 'success, user added. redirecting to todos' })
+                    return res.status(201).send({ ok: true, token: token, message: 'success, user added. redirecting to todos' })
                 }
             }
         } catch (e) {
@@ -48,18 +51,26 @@ class UserController {
     }
 
     async login(req, res) {
+        console.log('in our login')
         try {
             // destructure request body
-            let { username, email, password } = req.body
+            let { username_email, password } = req.body
+            // validation on back-end
+            if ( !username_email || !password )
+                return res.status(400).send({ok: false, message: 'all fields are required'})
             // build a query object to search by either username or pw
             let query = {}
-            if (email)
-                query.email = email
-            else if (username)
-                query.username = username
+            // if it's a valid email, look for email
+            if (/^\S+@\S+\.\S+$/.test(username_email))
+                query.email = username_email
+            // if it's not a valid email, and it's a valid username
+            else if (!/^\S+@\S+\.\S+$/.test(username_email) && /^[A-Za-z][A-Za-z0-9]*$/.test(username_email))
+                query.username = username_email
             else
-                return res.status(400).send('a username or email is required')
+                return res.status(400).send({ok: false, message: 'a valid username or email is required'}
+            )
             // find the user by username or email
+            console.log(query)
             let user = await User.findOne(query)
             // if our user is not found by username/pw, or if password does not match
             if (!user || !(await user.comparePassword(password)))
@@ -67,6 +78,7 @@ class UserController {
             const token = jwt.sign({ userId: user._id }, jwt_secret)
             res.send({ token })
         } catch (e) {
+            console.log('error logging in user: ', e)
             res.send(e)
         }
     }

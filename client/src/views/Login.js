@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { fetchUsers, addUser } from '../services/userRequests'
+import { fetchUsers, addUser, loginUser } from '../services/userRequests'
 
 export default function Login() {
 
@@ -18,7 +18,7 @@ export default function Login() {
     let submitHandler = e => {
         e.preventDefault()
         // handle register
-        let { username, email, password, password2 } = formValues
+        let { username, email, password, password2, username_email } = formValues
         if (registerSelected) {
             if ( !username || !email || !password || !password2 )
                 setMessage('all fields are required')
@@ -37,7 +37,17 @@ export default function Login() {
         }
         // handle login
         else if (!registerSelected) {
-            console.log('login submit')
+            // validation on front-end
+            if ( !username_email || !password)
+                setMessage('all fields are required')
+            // if it's both not a valid email nor a valid username
+            else if (!/^\S+@\S+\.\S+$/.test(username_email) && !/^[A-Za-z][A-Za-z0-9]*$/.test(username_email))
+                setMessage('a valid username or email is required')
+            else {
+                loginUser(formValues).then((res) => {
+                    console.log(res)
+                })
+            }
         }
         // throw error
         else {}

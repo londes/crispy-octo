@@ -16,7 +16,19 @@ export async function addUser(userData = {}) {
         // handle response if needed
         return res
     } catch (error) {
-        console.error('error adding todo: ', error)
+        console.error('error adding user: ', error)
+        throw error;
+    }
+}
+
+// something is up either here, or in our server code
+export async function loginUser(userData = {}) {
+    try {
+        console.log(userData)
+        const res = await postToUsers('/login', userData)
+        return res
+    } catch (error) {
+        console.error('error logging user in: ', error)
         throw error;
     }
 }

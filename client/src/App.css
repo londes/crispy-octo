@@ -23,6 +23,11 @@ ul {
   justify-content: space-between;
 }
 
+.header-nav-links > * {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 form {
   margin: 20px auto 20px auto;
   width: 40vw;
