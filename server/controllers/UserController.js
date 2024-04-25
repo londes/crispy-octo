@@ -109,7 +109,7 @@ class UserController {
             // create a new object with all of our updates, and remove _id which we don't want here
             let updateObj = {...req.body}
             delete updateObj._id
-            // locate user by ID and update according to new information provided. note that options param {new: true syntax} ensures that an updated username is always returned in our ternary statement if
+            // locate user by ID and update according to new information provided. note that options param {new: true syntax} ensures that an updated username is always returned in our ternary statement if updated
             let user = await User.findOneAndUpdate({ _id: _id }, { $set: updateObj }, { new: true })
             user 
                 ? res.status(200).send({ok: true, message: `user ${user.username} updated`})

@@ -1,5 +1,7 @@
 import { URL } from "../config"
 
+const token = localStorage.getItem('token')
+
 export async function fetchUsers() {
     const res = await fetch(`${URL}/user`, [])
     if (!res.ok) {
@@ -12,7 +14,6 @@ export async function fetchUsers() {
 
 export async function addUser(userData = {}) {
     try {
-        console.log(userData)
         const res = await postToUsers('/register', userData)
         // handle response if needed
         return res
@@ -61,7 +62,8 @@ export async function postToUsers(url='', data = {}) {
         mode:"cors",
         body: JSON.stringify(data),
         headers: {
-            "Content-Type": 'application/json'
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${token}`
         }
     })
     return res.json()

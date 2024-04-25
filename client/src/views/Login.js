@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { fetchUsers, addUser, loginUser } from '../services/userRequests'
 
-export default function Login() {
+export default function Login({ setIsLoggedIn }) {
 
     let [ formValues, setFormValues] = useState ({
         username: '',
@@ -44,8 +44,7 @@ export default function Login() {
                 addUser(formValues).then((res)=>{
                     if (res.ok) {
                         setMessage(res.message)
-                        // do stuff with res
-                        console.log(res)
+                        localStorage.setItem('token', res.token)
                     }
                     else {
                         setMessage(res.message)
@@ -65,8 +64,8 @@ export default function Login() {
                 loginUser(formValues).then((res) => {
                     if (res.ok) {
                         setMessage(res.message)
-                        // do stuff with res
-                        console.log(res)
+                        localStorage.setItem('token', res.token)
+                        setIsLoggedIn(true)
                     }
                     else {
                         setMessage(res.message)

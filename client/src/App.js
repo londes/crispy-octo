@@ -21,6 +21,12 @@ function App() {
     index: null
   })
 
+  useEffect(()=>{
+    let token = localStorage.getItem('token')
+    if (token)
+      setIsLoggedIn(true)
+  }, [])
+
   let changeHandler = e => setTask({...task, [e.target.attributes.indic.value]: e.target.value})
   
   let submitHandler = e => {
@@ -120,11 +126,11 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        <Navbar loggedIn={isLoggedIn}/>
         <Routes>
-          <Route path='/' element={<Todos submit={submitHandler} task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/profile' element={<Profile />}/>
+          <Route path='/' element={<Todos task={task} submit={submitHandler} task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>}/>
+          <Route path='/login' element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
+          <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} />}/>
         </Routes>
       </Router>
     </div>

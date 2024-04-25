@@ -128,3 +128,10 @@ form > button {
   margin: 5px
 }
 
+.logout-container {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 4vh;
+}
+
