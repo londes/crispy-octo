@@ -41,6 +41,10 @@ form > * {
   margin: 1vh;
 }
 
+form > input {
+  height: 3vh
+}
+
 .form-item {
   display: flex;
   flex-direction: column;
@@ -55,7 +59,7 @@ form > * {
 
 .form-item > input {
   /* border: 3px solid blue; */
-  height: 3.5vh;
+  height: 3vh;
   width: 30vw;
   margin-left: auto;
   margin-right: auto;

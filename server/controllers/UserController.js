@@ -41,7 +41,7 @@ class UserController {
                     // save user to db
                     user.save()
                     const token = jwt.sign({ userId: user._id}, jwt_secret)
-                    return res.status(201).send({ ok: true, token: token, message: 'success, user added. redirecting to todos' })
+                    return res.status(201).send({ ok: true, token, message: 'success, user added. redirecting to todos' })
                 }
             }
         } catch (e) {
@@ -51,7 +51,6 @@ class UserController {
     }
 
     async login(req, res) {
-        console.log('in our login')
         try {
             // destructure request body
             let { username_email, password } = req.body
@@ -74,9 +73,9 @@ class UserController {
             let user = await User.findOne(query)
             // if our user is not found by username/pw, or if password does not match
             if (!user || !(await user.comparePassword(password)))
-                return res.status(401).send('authentication failed, bad username/email or password')
+                return res.status(401).send({ok: false, message: 'user not found or incorrect password'})
             const token = jwt.sign({ userId: user._id }, jwt_secret)
-            res.send({ token })
+            res.send({ ok: true, token, message: 'login successful. redirecting to todos' })
         } catch (e) {
             console.log('error logging in user: ', e)
             res.send(e)

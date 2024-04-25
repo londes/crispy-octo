@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fetchUsers, addUser, loginUser } from '../services/userRequests'
 
 export default function Login() {
@@ -12,6 +12,17 @@ export default function Login() {
     })
     let [ registerSelected, setRegisterSelected ] = useState(false)
     let [ message, setMessage ] = useState('')
+
+    useEffect(()=>{
+        setFormValues({
+            username: '',
+            password: '',
+            password2: '',
+            email: '',
+            username_email: ''
+        })
+        setMessage('')
+    }, [registerSelected])
 
     let changeHandler = e => setFormValues({...formValues, [e.target.attributes.name.value]: e.target.value})
 
@@ -31,7 +42,14 @@ export default function Login() {
             else {
                 // success, send to back-end
                 addUser(formValues).then((res)=>{
-                    res.message ? setMessage(res.message) : setMessage('server error, did not register user. please try again')
+                    if (res.ok) {
+                        setMessage(res.message)
+                        // do stuff with res
+                        console.log(res)
+                    }
+                    else {
+                        setMessage(res.message)
+                    }
                 })
             }
         }
@@ -45,13 +63,19 @@ export default function Login() {
                 setMessage('a valid username or email is required')
             else {
                 loginUser(formValues).then((res) => {
-                    console.log(res)
+                    if (res.ok) {
+                        setMessage(res.message)
+                        // do stuff with res
+                        console.log(res)
+                    }
+                    else {
+                        setMessage(res.message)
+                    }
                 })
             }
         }
         // throw error
-        else {}
-        // fetchUsers().then(()=>{console.log('fetched')})
+        else { console.log('ERROR: something broke in our submitHandler, there is no value for registerSelected')}
     }
 
     if (!registerSelected)
@@ -59,17 +83,16 @@ export default function Login() {
             <div className="login-register-container">
                 <form
                     onSubmit={submitHandler}
-                    onChange={changeHandler}
                     className="form-container"
                     autoComplete="off"
                 >
                     <div className="form-item">
                         <label>username or email</label>
-                        <input name="username_email" />
+                        <input name="username_email" value={formValues.username_email} onChange={changeHandler}/>
                     </div>
                     <div className="form-item">
                         <label>password</label>
-                        <input name="password"/>
+                        <input name="password" value={formValues.password} onChange={changeHandler}/>
                     </div>
                     <button>login</button>
                     <div className="message">
@@ -86,25 +109,24 @@ export default function Login() {
             <div className="login-register-container">
                 <form
                     onSubmit={submitHandler}
-                    onChange={changeHandler}
                     className="form-container"
                     autoComplete='off'
                 >
                     <div className="form-item">
                         <label>username</label>
-                        <input name="username"/>
+                        <input name="username" value={formValues.username} onChange={changeHandler}/>
                     </div>
                     <div className="form-item">
                         <label>email</label>
-                        <input name="email" />
+                        <input name="email" value={formValues.email} onChange={changeHandler}/>
                     </div>
                     <div className="form-item">
                         <label>password</label>
-                        <input name="password" />
+                        <input name="password" value={formValues.password} onChange={changeHandler}/>
                     </div>
                     <div className="form-item">
                         <label>verify password</label>
-                        <input name="password2" />
+                        <input name="password2" value={formValues.password2} onChange={changeHandler}/>
                     </div>
                     <button>register</button>
                     <div className="message">

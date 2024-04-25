@@ -12,6 +12,7 @@ export async function fetchUsers() {
 
 export async function addUser(userData = {}) {
     try {
+        console.log(userData)
         const res = await postToUsers('/register', userData)
         // handle response if needed
         return res
@@ -24,7 +25,6 @@ export async function addUser(userData = {}) {
 // something is up either here, or in our server code
 export async function loginUser(userData = {}) {
     try {
-        console.log(userData)
         const res = await postToUsers('/login', userData)
         return res
     } catch (error) {
