@@ -8,10 +8,14 @@ import Profile from './views/Profile.js';
 import Todos from './views/Todos.js'
 
 import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/todosRequests.js'
+import { verifyToken } from './services/userRequests.js';
 
 function App() {
 
-  let [isLoggedIn, setIsLoggedIn] = useState(false)
+  let [ isLoggedIn, setIsLoggedIn ] = useState(false)
+  let [ token, setToken ] = useState(localStorage.getItem('token'))
+  // let [ user, setUser ] = useState(localStorage.getItem('user'))
+
   let [todoItems, setTodoItems] = useState([])
   let [task, setTask] = useState({
     todo: '',
@@ -22,10 +26,24 @@ function App() {
   })
 
   useEffect(()=>{
-    let token = localStorage.getItem('token')
-    if (token)
-      setIsLoggedIn(true)
-  }, [])
+    let verify_token = async () => {
+      console.log('verifying token')
+      try {
+        if (!token)
+          setIsLoggedIn(false)
+        else {
+          let res = await verifyToken(token)
+          return res.ok ? setIsLoggedIn(true) : console.log('invalid token')
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    verify_token()
+    // let token = localStorage.getItem('token')
+    // if (token)
+    //   setIsLoggedIn(true)
+  }, [token])
 
   let changeHandler = e => setTask({...task, [e.target.attributes.indic.value]: e.target.value})
   

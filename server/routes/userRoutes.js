@@ -13,4 +13,6 @@ router.post('/update', controller.update)
 
 router.post('/delete', controller.delete)
 
+router.post('/verify_token', controller.verify_token)
+
 module.exports = router

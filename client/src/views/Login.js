@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { fetchUsers, addUser, loginUser } from '../services/userRequests'
+import { useNavigate } from 'react-router-dom'
 
 export default function Login({ setIsLoggedIn }) {
 
@@ -12,6 +13,8 @@ export default function Login({ setIsLoggedIn }) {
     })
     let [ registerSelected, setRegisterSelected ] = useState(false)
     let [ message, setMessage ] = useState('')
+
+    let navigate = useNavigate()
 
     useEffect(()=>{
         setFormValues({
@@ -66,6 +69,9 @@ export default function Login({ setIsLoggedIn }) {
                         setMessage(res.message)
                         localStorage.setItem('token', res.token)
                         setIsLoggedIn(true)
+                        setTimeout(()=>{
+                            navigate('/')
+                        }, 1000)
                     }
                     else {
                         setMessage(res.message)

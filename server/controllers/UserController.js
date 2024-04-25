@@ -116,8 +116,13 @@ class UserController {
                 : res.status(404).send({ok: true, message: `user not found, nothing updated`})
         } catch(e) {
             console.log(e)
-            res.status(500).send({ok: false, message: 'internal server error during update'})
+            return res.status(500).send({ok: false, message: 'internal server error during update'})
         }
+    }
+
+    async verify_token(req, res) {
+        console.log('hitting our verify in our controller')
+        return res.status(200).send({ok: true, message: 'in our verify_token'})
     }
 }
 

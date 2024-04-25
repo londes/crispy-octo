@@ -34,6 +34,16 @@ export async function loginUser(userData = {}) {
     }
 }
 
+export async function verifyToken(token = {}) {
+    try {
+        const res = await postToUsers('/verify_token', {}, token)
+        return res
+    } catch (error) {
+        console.error('error verifying token: ', error)
+        throw error;
+    }
+}
+
 // export async function deleteTodo(todoData = {}) {
 //     try {
 //         const res = await postToTodos(`/delete`, todoData)
@@ -56,7 +66,7 @@ export async function loginUser(userData = {}) {
 //     }
 // }
   
-export async function postToUsers(url='', data = {}) {
+export async function postToUsers(url='', data = {}, token = {}) {
     const res = await fetch(`${URL}/user${url}`, {
         method:"POST",
         mode:"cors",
