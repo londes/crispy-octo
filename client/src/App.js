@@ -8,13 +8,14 @@ import Profile from './views/Profile.js';
 import Todos from './views/Todos.js'
 
 import { fetchTodos, addTodo, deleteTodo, updateTodos } from './services/todosRequests.js'
-import { verifyToken } from './services/userRequests.js';
+import { fetchUsers, verifyToken } from './services/userRequests.js';
 
 function App() {
 
-  let [ isLoggedIn, setIsLoggedIn ] = useState(false)
+  // only reason we are setting logged in to true here is because if false we get some bad flicker on our Profile/Login link, and we check for token right away in our [token] useEffect which happens much faster than waiting for a response from the server
+  let [ isLoggedIn, setIsLoggedIn ] = useState(true)
   let [ token, setToken ] = useState(localStorage.getItem('token'))
-  // let [ user, setUser ] = useState(localStorage.getItem('user'))
+  let [ user, setUser ] = useState(localStorage.getItem('userId'))
 
   let [todoItems, setTodoItems] = useState([])
   let [task, setTask] = useState({
@@ -25,25 +26,43 @@ function App() {
     index: null
   })
 
+  // let navigate = useNavigate()
+
   useEffect(()=>{
-    let verify_token = async () => {
-      console.log('verifying token')
+    const verify_token = async () => {
       try {
         if (!token)
           setIsLoggedIn(false)
         else {
           let res = await verifyToken(token)
-          return res.ok ? setIsLoggedIn(true) : console.log('invalid token')
+          return res.ok ? login(res.succ.userId) : console.log('invalid token')
         }
       } catch (error) {
         console.log(error)
       }
     }
     verify_token()
-    // let token = localStorage.getItem('token')
-    // if (token)
-    //   setIsLoggedIn(true)
-  }, [token])
+  }, [isLoggedIn])
+
+  let login = async (userId) => {
+   localStorage.setItem('userId', userId)
+    setIsLoggedIn(true)
+    setToken(token)
+  }
+
+  // this used to be handleLogout in our Profile component until we moved it into the parent. should we just move it back? Could avoid making context entirely
+  let logout = (e) => {
+    e.preventDefault()
+    localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    setToken('')
+    setUser('')
+    setIsLoggedIn(false)
+    setTimeout(()=>{
+        // tis broken sir
+        // navigate('/')
+    }, 1000)
+}
 
   let changeHandler = e => setTask({...task, [e.target.attributes.indic.value]: e.target.value})
   
@@ -146,9 +165,9 @@ function App() {
       <Router>
         <Navbar loggedIn={isLoggedIn}/>
         <Routes>
-          <Route path='/' element={<Todos task={task} submit={submitHandler} task={task} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>}/>
+          <Route path='/' element={<Todos task={task} submit={submitHandler} todos={todoItems} complete={completeHandler} remove={removeHandler} edit={editHandler} change={changeHandler} dragStart={onDragStart} dragEnter={onDragEnter} dragEnd={dragSortHandler}/>}/>
           <Route path='/login' element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
-          <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} />}/>
+          <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} logout={logout}/>}/>
         </Routes>
       </Router>
     </div>

@@ -16,6 +16,20 @@ class UserController {
         }
     }
 
+    async getUser(req, res) {
+        let { userId } = req.params
+        try {
+            let foundUser = await User.findOne({ _id: userId })
+            console.log(foundUser)
+            return foundUser 
+                ? res.status(200).send({ok: true, foundUser: foundUser})
+                : res.status(404).send({ok: false, message: 'user not found'})
+        } catch (e) {
+            console.log('error getting user: ', e)
+            res.send(e)
+        }
+    }
+
     async register(req, res) {
         try {
             // destructuring our request object
@@ -121,8 +135,23 @@ class UserController {
     }
 
     async verify_token(req, res) {
-        console.log('hitting our verify in our controller')
-        return res.status(200).send({ok: true, message: 'in our verify_token'})
+        // checking for our auth header and the Bearer indication
+        if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer'))
+            return res.status(401).send({ ok: false, message: 'no token provided'})
+
+        const token = req.headers.authorization.split(' ')[1];
+        // we want to catch the case wehre a bad token is provided, namely lacks 'Bearer abc123' format
+        if (!token)
+            return res.status(401).send({ ok: false, message: 'bad token or missing token' });
+
+        jwt.verify(token, jwt_secret, ( err, succ ) => {
+            if (err) {
+                console.log('token verification error', err)
+                return res.status(400).send({ok: false, messsage: 'token is invalid'})
+            }
+            req.user = succ
+            return res.status(200).send({ ok: true, succ })
+        })
     }
 }
 
