@@ -20,7 +20,6 @@ class UserController {
         let { userId } = req.params
         try {
             let foundUser = await User.findOne({ _id: userId })
-            console.log(foundUser)
             return foundUser 
                 ? res.status(200).send({ok: true, foundUser: foundUser})
                 : res.status(404).send({ok: false, message: 'user not found'})
@@ -142,7 +141,7 @@ class UserController {
         const token = req.headers.authorization.split(' ')[1];
         // we want to catch the case wehre a bad token is provided, namely lacks 'Bearer abc123' format
         if (!token)
-            return res.status(401).send({ ok: false, message: 'bad token or missing token' });
+            return res.status(401).send({ ok: false, message: 'bad or missing token' });
 
         jwt.verify(token, jwt_secret, ( err, succ ) => {
             if (err) {

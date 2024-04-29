@@ -16,11 +16,12 @@ class TodosController {
 
     async add(req, res) {
         try {
+            let { todo, completed, editing, index} = req.body
             let match = await Todos.find({todo: req.body.todo})
             match.length > 0
                 ? res.send({ok: true, data: `WARNING: todo ${req.body.todo} already exists, nothing added`})
                 : (async function addTodo() {
-                    await Todos.create({todo: req.body.todo})
+                    await Todos.create({ todo, index })
                     res.send({ok: true, data: `todo ${req.body.todo} successfully added`})
                 })()
         } catch (e) {
@@ -52,7 +53,9 @@ class TodosController {
             session.startTransaction()
 
             for (let i = 0; i < updates.length; i++) {
+                // grab our update object in our array
                 let updateObj = updates[i]
+                // pull out our _id and create a new obj with the rest of the values
                 let {_id, ...updateFields} = updateObj
 
                 let match = await Todos.findOneAndUpdate(
@@ -84,22 +87,6 @@ class TodosController {
         }
     }
 
-    // async update(req, res) {
-    //     console.log('in our update')
-    //     let { _id } = req.body
-    //     let updateObj = {}
-    //     for (let update in req.body) 
-    //         updateObj = {...updateObj, [update]: req.body[update]}
-    //     try {
-    //         let match = await Todos.findOneAndUpdate({_id: _id}, {$set: updateObj})
-    //         console.log(match)
-    //         !!match
-    //             ? res.send({ok: true, data: `todo ${todo} successfully updated`})
-    //             : res.send({ok: true, data: `WARNING: todo ${req.body.todo} not found, nothing updated`})
-    //     } catch(e) {
-    //         res.send(e)
-    //     }
-    // }
 }
 
 module.exports = new TodosController()
