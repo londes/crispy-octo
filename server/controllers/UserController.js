@@ -53,7 +53,7 @@ class UserController {
                     const user = new User({ username, email, password })
                     // save user to db
                     user.save()
-                    const token = jwt.sign({ userId: user._id}, jwt_secret)
+                    const token = jwt.sign({ userId: user._id }, jwt_secret)
                     return res.status(201).send({ ok: true, token, message: 'success, user added. redirecting to todos' })
                 }
             }
@@ -82,7 +82,6 @@ class UserController {
                 return res.status(400).send({ok: false, message: 'a valid username or email is required'}
             )
             // find the user by username or email
-            console.log(query)
             let user = await User.findOne(query)
             // if our user is not found by username/pw, or if password does not match
             if (!user || !(await user.comparePassword(password)))

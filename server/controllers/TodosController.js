@@ -5,6 +5,8 @@ const Todos = require('../models/todos')
 class TodosController {
 
     async getAll(req, res) {
+        console.log('in our getAll')
+        console.log(req.body)
         try {
             let todos = await Todos.find({})
             res.send(todos)
@@ -45,7 +47,6 @@ class TodosController {
     }
 
     async update(req, res) {
-        console.log('in our update')
         let { updates } = req.body
         let session = null
         try {
