@@ -2,14 +2,15 @@ import React, { useState, useRef } from 'react'
 
 import { addTodo, updateTodos, deleteTodo } from '../services/todosRequests.js'
 
-export default function TodoList({ todos, setTodos }) {
+export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
 
     let [task, setTask] = useState({
         todo: '',
         completed: false,
         editing: false,
         editValue: '',
-        index: null
+        index: null,
+        user_id: ''
     })
 
     let changeHandler = e => setTask({...task, [e.target.attributes.indic.value]: e.target.value})
@@ -17,12 +18,25 @@ export default function TodoList({ todos, setTodos }) {
     let submitHandler = e => {
         e.preventDefault()
         if (task.todo !== '') {
-          task.index = todos.length
-          console.log(task)
-          addTodo(task).then(()=>{
-            setTodos([...todos, task])
-            setTask({...task, todo: ''})
-          })
+            task.index = todos.length
+            if (user && user.userId)
+                task.user_id = user.userId
+            console.log(task)
+            console.log(user)
+            if (isLoggedIn) {
+                addTodo(task).then(()=>{
+                    setTodos([...todos, task])
+                    setTask({...task, todo: ''})
+                })
+            }
+            else {
+                let localTodos = JSON.parse(localStorage.getItem('todos'))
+                localTodos.push(task)
+                localStorage.setItem('todos', JSON.stringify(localTodos))
+                console.log(localTodos)
+                setTodos([...todos, task])
+                setTask({...task, todo: ''})
+            }
         }
     }
 
