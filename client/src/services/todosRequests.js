@@ -1,7 +1,8 @@
 import { URL } from "../config"
 
-export async function fetchTodos() {
-    const res = await fetch(`${URL}/todos`, [])
+export async function fetchTodos(todoData) {
+    console.log(todoData)
+    const res = await fetch(`${URL}/todos`)
     if (!res.ok) {
       const message = 'error fetching todos'
       throw new Error(message)
@@ -43,7 +44,7 @@ export async function updateTodos(updates = []) {
     }
 }
   
-export async function postToTodos(url='', data = {}) {
+async function postToTodos(url='', data = {}) {
     const res = await fetch(`${URL}/todos${url}`, {
         method:"POST",
         mode:"cors",
@@ -54,4 +55,6 @@ export async function postToTodos(url='', data = {}) {
     })
     return res.json()
 }
+
+
 

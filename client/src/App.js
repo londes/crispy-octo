@@ -22,10 +22,6 @@ function App() {
     const verify_token = async () => {
       try {
         if (!token)
-          // we could go async here and leverage then, or just update our logout function and call it here.
-          // we could also just set our empty array here
-          // we might be bloating our login function
-          //setIsLoggedIn(false)
           logout()
         else {
           let res = await verifyToken(token)
@@ -35,7 +31,7 @@ function App() {
         console.log(error)
       }
     }
-    verify_token() //.then(res => console.log(res))
+    verify_token()
   }, [isLoggedIn])
 
   let login = (token) => {
@@ -56,14 +52,14 @@ function App() {
     // update any todos from localStorage
     // ...
     // grab our todos from the server, because our user is logged in
-    fetchTodos().then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
+    console.log(user)
+    fetchTodos(user).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
   }
 
   // this used to be handleLogout in our Profile component until we moved it into the parent. should we just move it back? Could avoid making context entirely
   let logout = (e=null) => {
     e?.preventDefault()
     // remove localStorage values, and set todos to empty array
-    console.log('in our logout')
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.setItem('todos', JSON.stringify([]))

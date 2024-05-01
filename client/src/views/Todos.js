@@ -23,20 +23,17 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
                 task.user_id = user.userId
             console.log(task)
             console.log(user)
-            if (isLoggedIn) {
-                addTodo(task).then(()=>{
-                    setTodos([...todos, task])
-                    setTask({...task, todo: ''})
-                })
-            }
+            // if user is logged in, post task to db
+            if (isLoggedIn)
+                addTodo(task)
+            // if not logged in, pull from localStorage and add task there
             else {
                 let localTodos = JSON.parse(localStorage.getItem('todos'))
                 localTodos.push(task)
                 localStorage.setItem('todos', JSON.stringify(localTodos))
-                console.log(localTodos)
-                setTodos([...todos, task])
-                setTask({...task, todo: ''})
             }
+            setTodos([...todos, task])
+            setTask({...task, todo: ''})
         }
     }
 
