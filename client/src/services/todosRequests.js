@@ -1,8 +1,13 @@
 import { URL } from "../config"
 
-export async function fetchTodos(todoData) {
-    console.log(todoData)
-    const res = await fetch(`${URL}/todos`)
+export async function fetchTodos(token) {
+    const res = await fetch(`${URL}/todos`, {
+        method:"GET",
+        mode:"cors",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
     if (!res.ok) {
       const message = 'error fetching todos'
       throw new Error(message)

@@ -2,8 +2,9 @@ const express = require('express')
 const { model } = require('mongoose')
 const router = express.Router()
 const controller = require('../controllers/TodosController')
+const verifyToken = require('../middleware/verifyToken')
 
-router.get('/', controller.getAll)
+router.get('/', verifyToken, controller.getAll)
 
 router.post('/add', controller.add)
 

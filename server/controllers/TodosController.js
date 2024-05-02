@@ -6,7 +6,7 @@ class TodosController {
 
     async getAll(req, res) {
         console.log('in our getAll')
-        console.log(req.body)
+        console.log(req.user)
         try {
             let todos = await Todos.find({})
             res.send(todos)

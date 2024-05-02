@@ -53,7 +53,7 @@ function App() {
     // ...
     // grab our todos from the server, because our user is logged in
     console.log(user)
-    fetchTodos(user).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
+    fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
   }
 
   // this used to be handleLogout in our Profile component until we moved it into the parent. should we just move it back? Could avoid making context entirely
