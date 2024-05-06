@@ -87,7 +87,7 @@ class UserController {
             if (!user || !(await user.comparePassword(password)))
                 return res.status(401).send({ok: false, message: 'user not found or incorrect password'})
             const token = jwt.sign({ userId: user._id }, jwt_secret)
-            res.send({ ok: true, token, message: 'login successful. redirecting to todos' })
+            return res.send({ ok: true, token, message: 'login successful. redirecting to todos' })
         } catch (e) {
             console.log('error logging in user: ', e)
             res.send(e)
