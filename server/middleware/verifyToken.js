@@ -2,11 +2,8 @@ const jwt = require ('jsonwebtoken')
 const jwt_secret = process.env.JWT_SECRET
 
 const verifyToken = async (req, res, next) => {
-    console.log('in our verify function')
-    console.log(req.headers)
     // checking for our auth header and the Bearer indication
     if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer')) {
-        console.log('1st check')
         return res.status(401).send({ ok: false, message: 'no token provided'})
     }
 

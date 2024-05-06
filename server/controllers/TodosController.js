@@ -6,9 +6,9 @@ class TodosController {
 
     async getAll(req, res) {
         console.log('in our getAll')
-        console.log(req.user)
+        let { userId } = req.user
         try {
-            let todos = await Todos.find({})
+            let todos = await Todos.find({ user_id: userId })
             res.send(todos)
         } catch (e) {
             console.log(e)
@@ -18,12 +18,12 @@ class TodosController {
 
     async add(req, res) {
         try {
-            let { todo, completed, editing, index} = req.body
+            let { todo, completed, editing, index, user_id } = req.body
             let match = await Todos.find({todo: req.body.todo})
             match.length > 0
                 ? res.send({ok: true, data: `WARNING: todo ${req.body.todo} already exists, nothing added`})
                 : (async function addTodo() {
-                    await Todos.create({ todo, index })
+                    await Todos.create({ todo, index, user_id })
                     res.send({ok: true, data: `todo ${req.body.todo} successfully added`})
                 })()
         } catch (e) {

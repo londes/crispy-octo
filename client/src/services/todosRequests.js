@@ -1,6 +1,8 @@
 import { URL } from "../config"
 
 export async function fetchTodos(token) {
+    // we need to clean up our code after getting our middleware working
+    console.log('in our fetch todos')
     const res = await fetch(`${URL}/todos`, {
         method:"GET",
         mode:"cors",

@@ -17,12 +17,11 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
 
     let submitHandler = e => {
         e.preventDefault()
+        // if our task input is not empty
         if (task.todo !== '') {
             task.index = todos.length
             if (user && user.userId)
                 task.user_id = user.userId
-            console.log(task)
-            console.log(user)
             // if user is logged in, post task to db
             if (isLoggedIn)
                 addTodo(task)
@@ -32,6 +31,7 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
                 localTodos.push(task)
                 localStorage.setItem('todos', JSON.stringify(localTodos))
             }
+            console.log(task)
             setTodos([...todos, task])
             setTask({...task, todo: ''})
         }
