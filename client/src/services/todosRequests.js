@@ -1,8 +1,6 @@
 import { URL } from "../config"
 
 export async function fetchTodos(token) {
-    // we need to clean up our code after getting our middleware working
-    console.log('in our fetch todos')
     const res = await fetch(`${URL}/todos`, {
         method:"GET",
         mode:"cors",
@@ -18,9 +16,20 @@ export async function fetchTodos(token) {
     return todos
   }
 
-export async function addTodo(todoData = {}) {
+// export async function addTodo(todoData = {}) {
+//     try {
+//         const res = await postToTodos('/add', todoData)
+//         // handle response if needed
+//         return res
+//     } catch (error) {
+//         console.error('error adding todo: ', error)
+//         throw error;
+//     }
+// }
+
+export async function addTodo(todos = []) {
     try {
-        const res = await postToTodos('/add', todoData)
+        const res = await postToTodos('/add', { todos })
         // handle response if needed
         return res
     } catch (error) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { fetchUsers, addUser, loginUser } from '../services/userRequests'
 import { useNavigate } from 'react-router-dom'
 
-export default function Login({ login }) {
+export default function Login({ login, setIsLoggedIn, setToken }) {
     
     let [ formValues, setFormValues] = useState ({
         username: '',
@@ -47,7 +47,10 @@ export default function Login({ login }) {
                 addUser(formValues).then((res)=>{
                     if (res.ok) {
                         setMessage(res.message)
-                        localStorage.setItem('token', res.token)
+                        login(res.token)
+                        setTimeout(()=>{
+                            navigate('/')
+                        }, 1000)
                     }
                     else {
                         setMessage(res.message)

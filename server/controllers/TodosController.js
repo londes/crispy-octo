@@ -5,7 +5,6 @@ const Todos = require('../models/todos')
 class TodosController {
 
     async getAll(req, res) {
-        console.log('in our getAll')
         let { userId } = req.user
         try {
             let todos = await Todos.find({ user_id: userId })
@@ -17,17 +16,40 @@ class TodosController {
     }
 
     async add(req, res) {
+        let { todos } = req.body
+        let session = null 
         try {
-            let { todo, completed, editing, index, user_id } = req.body
-            let match = await Todos.find({todo: req.body.todo})
-            match.length > 0
-                ? res.send({ok: true, data: `WARNING: todo ${req.body.todo} already exists, nothing added`})
-                : (async function addTodo() {
-                    await Todos.create({ todo, index, user_id })
-                    res.send({ok: true, data: `todo ${req.body.todo} successfully added`})
-                })()
-        } catch (e) {
-            res.send(e)
+            session = await mongoose.startSession()
+            session.startTransaction()
+
+            for (let i=0; i < todos.length; i++) {
+                // grab our new todo from array
+                let newTodo = todos[i]
+                console.log(newTodo)
+                let { todo, index, user_id } = newTodo
+                
+                let match = await Todos.findOne({ todo, user_id })
+                match
+                    ? console.log(`WARNING: todo ${todo} already exists, nothing added`)
+                    : await Todos.create({ todo, index, user_id })
+            }
+            
+            await session.commitTransaction();
+            session.endSession();
+            res.send({ ok: true, data: `todos added successfully`})
+        } catch (error) {
+            if (session) {
+                try {
+                    await session.abortTransaction()
+                } catch (abortError) {
+                    console.error('error aborting transaction: ', abortError)
+                } finally {
+                    console.log('session ended')
+                    session.endSession()
+                }
+            }
+            console.error(`error adding todos`, error)
+            res.status(500).send({ok: false, error: `failed to add todos`})
         }
     }
 

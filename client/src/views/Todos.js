@@ -17,22 +17,25 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
 
     let submitHandler = e => {
         e.preventDefault()
-        // if our task input is not empty
-        if (task.todo !== '') {
+        // if our task input is not empty, and does not match an existing todo
+        if (task.todo !== '' && !todos.some(todo => task.todo == todo.todo)) {
             task.index = todos.length
             if (user && user.userId)
                 task.user_id = user.userId
             // if user is logged in, post task to db
             if (isLoggedIn)
-                addTodo(task)
+                addTodo([task]).then(res => {
+                    if (res.ok)
+                        setTodos([...todos, task])
+                })
             // if not logged in, pull from localStorage and add task there
             else {
                 let localTodos = JSON.parse(localStorage.getItem('todos'))
                 localTodos.push(task)
                 localStorage.setItem('todos', JSON.stringify(localTodos))
+                setTodos([...todos, task])
             }
-            console.log(task)
-            setTodos([...todos, task])
+
             setTask({...task, todo: ''})
         }
     }
@@ -98,10 +101,10 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
         _todos.splice(dragOverItem.current, 0, draggedTodo)
         // push all of the items which changed location to updated
         _todos.forEach((ele, idx) => {
-        if (ele.index !== idx) {
-            ele.index = idx
-            updated.push(ele)
-        }
+            if (ele.index !== idx) {
+                ele.index = idx
+                updated.push(ele)
+            }
         })    
         // reset our references for a new drag
         dragItem.current = null

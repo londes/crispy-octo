@@ -10,6 +10,7 @@ import Todos from './views/Todos.js'
 
 import { fetchTodos } from './services/todosRequests.js'
 import { fetchUsers, verifyToken, loginUser } from './services/userRequests.js';
+import { addTodo } from './services/todosRequests.js';
 
 function App() {
 
@@ -19,12 +20,14 @@ function App() {
   let [ todos, setTodos ] =  useState([])//useState(JSON.parse(localStorage.getItem('todos')))
 
   useEffect(() => {
+    console.log('in our use effect and isLoggedIn is now: ', isLoggedIn)
     const verify_token = async () => {
       try {
         if (!token)
           logout()
         else {
           let res = await verifyToken(token)
+          console.log(token)
           return res.ok ? login(token) : logout()
         }
       } catch (error) {
@@ -49,15 +52,29 @@ function App() {
     setIsLoggedIn(true)
     setUser(user)
     setToken(token)
-    // update any todos from localStorage
-    // ...
-    // grab our todos from the server, because our user is logged in
-    console.log(user)
-    fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
+    // check for todos on localStorage
+    let localTodos = JSON.parse(localStorage.getItem('todos'))
+    // if we have todos on local storage on register/login, add them to db for that user
+    if (localTodos && localTodos?.length > 0) {
+      // we want to add user_id, but remove index (avoids bugs if user has existing todos on login, and index isn't required)
+      let newTodos = localTodos.map(todo => {
+        let localTodo = { ...todo, user_id: user.userId}
+        delete localTodo.index
+        return localTodo
+      })
+      // add our local todos, then fetch and set
+      addTodo(newTodos).then(() => fetchTodos(token)).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
+      // remove local todos to avoid this from happening again for a logged in user
+      localStorage.removeItem('todos')
+    }
+    else
+      // if no local todos, just fetch user todos
+      fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
   }
 
   // this used to be handleLogout in our Profile component until we moved it into the parent. should we just move it back? Could avoid making context entirely
   let logout = (e=null) => {
+    console.log('in our logout')
     e?.preventDefault()
     // remove localStorage values, and set todos to empty array
     localStorage.removeItem('token')
@@ -78,10 +95,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar loggedIn={isLoggedIn}/>
+        <Navbar loggedIn={isLoggedIn} user={user}/>
         <Routes>
           <Route path='/' element={<Todos todos={todos} setTodos={setTodos} user={user} isLoggedIn={isLoggedIn}/>}/>
-          <Route path='/login' element={ <Login setIsLoggedIn={setIsLoggedIn} login={login}/> }/>
+          <Route path='/login' element={ <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} login={login} token={token} setToken={setToken}/> }/>
           <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} login={login} logout={logout}/>}/>
         </Routes>
       </Router>
