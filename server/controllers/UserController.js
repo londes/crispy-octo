@@ -64,6 +64,7 @@ class UserController {
     }
 
     async login(req, res) {
+        console.log('in our login')
         try {
             // destructure request body
             let { username_email, password } = req.body
@@ -87,6 +88,7 @@ class UserController {
             if (!user || !(await user.comparePassword(password)))
                 return res.status(401).send({ok: false, message: 'user not found or incorrect password'})
             const token = jwt.sign({ userId: user._id }, jwt_secret)
+            console.log(token)
             return res.send({ ok: true, token, message: 'login successful. redirecting to todos' })
         } catch (e) {
             console.log('error logging in user: ', e)
