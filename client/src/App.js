@@ -19,8 +19,8 @@ function App() {
   let [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')))
   let [ todos, setTodos ] =  useState(JSON.parse(localStorage.getItem('todos')))
 
-  // if a user is not logged in, we just want to update todos locally every time they change. otherwise, we just manage todos on the server
   useEffect(() => {
+    // if a user is not logged in, we want to update/manage todos locally
     if (!isLoggedIn)
       localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
@@ -77,24 +77,21 @@ function App() {
       })
       // add our local todos, then fetch and set
       addTodo(newTodos).then(() => fetchTodos(token)).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
-      // remove local todos to avoid having this happen again for a logged in user
-      localStorage.setItem('todos', JSON.stringify([]))
     }
     else
       // if no local todos, just fetch user todos
       fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
+    // remove local todos to avoid adding unwanted lingering todos for a logged in user. if there are no local todos, set to empty array to handle the null case
+    localStorage.setItem('todos', JSON.stringify([]))
   }
-
-  let localTodoHandler = (user) => {
-    
-  } 
 
   // handles logout
   let logout = (e=null) => {
+    // this is to handle initial load of website for a new user. if todos is null, set to an empty array. otherwise set them to localStorage.todos
+    todos ? localStorage.setItem('todos', JSON.stringify(todos)) : localStorage.setItem('todos', JSON.stringify([]))
     // we only actually want to clear localStorage todos if someone clicks a logout button
     if (e) {
       e.preventDefault()
-      localStorage.setItem('todos', JSON.stringify([]))
       setTodos([])
     }
     // remove localStorage values, and set todos to empty array
