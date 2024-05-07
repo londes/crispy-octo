@@ -87,9 +87,10 @@ function App() {
 
   // handles logout
   let logout = (e=null) => {
-    // this is to handle initial load of website for a new user. if todos is null, set to an empty array. otherwise set them to localStorage.todos
-    todos ? localStorage.setItem('todos', JSON.stringify(todos)) : localStorage.setItem('todos', JSON.stringify([]))
-    // we only actually want to clear localStorage todos if someone clicks a logout button
+    // this is to handle initial load of website for a new user. if todos is null, set to an empty array
+    if (!todos)
+      setTodos([])
+    // we only actually want to clear todos if someone clicks a logout button
     if (e) {
       e.preventDefault()
       setTodos([])
