@@ -8,7 +8,7 @@ class TodosController {
         let { userId } = req.user
         try {
             let todos = await Todos.find({ user_id: userId })
-            res.send(todos)
+            res.status(200).send(todos)
         } catch (e) {
             console.log(e)
             res.send(e)
@@ -17,6 +17,7 @@ class TodosController {
 
     async add(req, res) {
         let { todos } = req.body
+        console.log(todos)
         let session = null 
         try {
             session = await mongoose.startSession()

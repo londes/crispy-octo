@@ -9,7 +9,7 @@ import Profile from './views/Profile.js';
 import Todos from './views/Todos.js'
 
 import { fetchTodos } from './services/todosRequests.js'
-import { fetchUsers, verifyToken, loginUser } from './services/userRequests.js';
+import { verifyToken, fetchUser } from './services/userRequests.js';
 import { addTodo } from './services/todosRequests.js';
 
 function App() {
@@ -25,6 +25,12 @@ function App() {
       localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
 
+  // handle any updates or changes to our user in local storage as well
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(user))
+  }, [user])
+
+  // our main function for handling login/logout state
   useEffect(() => {
     const verify_token = async () => {
       try {
@@ -44,31 +50,34 @@ function App() {
   let login = (token) => {
     // decode token
     let decoded = jwtDecode(token)
-    console.log(decoded)
-    // parse values we want from our user
-    let user = {
-      userId: decoded.userId
-    }
+    // grab our user from our server, set locally
+    fetchUser(decoded.userId).then(res => {
+      if (res.ok) {
+        let { _id, username, email } = res.foundUser 
+        let user = {
+          userId: _id,
+          username, email
+        }
+        setUser(user)
+      }
+    })
     // set token and user values to local storage
     localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(user))
     // update user login, user, and token state values
     setIsLoggedIn(true)
-    setUser(user)
     setToken(token)
-    // check for todos on localStorage
+    // if we have todos on localStorage on register/login, add them to db for that user
     let localTodos = JSON.parse(localStorage.getItem('todos'))
-    // if we have todos on local storage on register/login, add them to db for that user
     if (localTodos && localTodos?.length > 0) {
       // we want to add user_id, but remove index (avoids bugs if user has existing todos on login, and index isn't required)
       let newTodos = localTodos.map(todo => {
-        let localTodo = { ...todo, user_id: user.userId}
+        let localTodo = { ...todo, user_id: decoded.userId}
         delete localTodo.index
         return localTodo
       })
       // add our local todos, then fetch and set
       addTodo(newTodos).then(() => fetchTodos(token)).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
-      // remove local todos to avoid this from happening again for a logged in user
+      // remove local todos to avoid having this happen again for a logged in user
       localStorage.setItem('todos', JSON.stringify([]))
     }
     else
@@ -76,9 +85,13 @@ function App() {
       fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
   }
 
+  let localTodoHandler = (user) => {
+    
+  } 
+
   // handles logout
   let logout = (e=null) => {
-    // we only actually want to clear localStorage.todos if someone clicks a logout button
+    // we only actually want to clear localStorage todos if someone clicks a logout button
     if (e) {
       e.preventDefault()
       localStorage.setItem('todos', JSON.stringify([]))
@@ -100,7 +113,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Todos todos={todos} setTodos={setTodos} user={user} isLoggedIn={isLoggedIn}/>}/>
           <Route path='/login' element={ <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} login={login} token={token} setToken={setToken}/> }/>
-          <Route path='/profile' element={<Profile logout={logout}/>}/>
+          <Route path='/profile' element={<Profile user={user} logout={logout}/>}/>
         </Routes>
       </Router>
     </div>

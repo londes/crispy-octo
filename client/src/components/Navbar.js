@@ -7,7 +7,7 @@ export default function Navbar({ loggedIn, user }) {
           <div className='crispytodo-title'><h1>crispy 🍗</h1></div>
           <ul className='header-nav-links'>
             <li><Link to='/'>todos</Link></li>
-            {loggedIn ? <li><Link to='/profile'>{user.userId}</Link></li> : <li><Link to='/login'>login</Link></li>}
+            {loggedIn ? <li><Link to='/profile'>{user.username}</Link></li> : <li><Link to='/login'>login</Link></li>}
           </ul>
         </div>
   )

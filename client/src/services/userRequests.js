@@ -2,7 +2,7 @@ import { URL } from "../config"
 
 const token = localStorage.getItem('token')
 
-export async function fetchUsers(id='') {
+export async function fetchUser(id='') {
     const res = await fetch(`${URL}/user/${id}`, [])
     if (!res.ok) {
       const message = 'error fetching users'

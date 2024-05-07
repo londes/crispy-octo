@@ -131,7 +131,13 @@ form > button {
 .logout-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   margin: auto;
   margin-top: 4vh;
+}
+
+.logout-container > * {
+  margin-bottom: 2vh
 }
 
