@@ -17,17 +17,21 @@ function App() {
   let [ isLoggedIn, setIsLoggedIn ] = useState(false)
   let [ token, setToken ] = useState(localStorage.getItem('token'))
   let [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')))
-  let [ todos, setTodos ] =  useState([])//useState(JSON.parse(localStorage.getItem('todos')))
+  let [ todos, setTodos ] =  useState(JSON.parse(localStorage.getItem('todos')))
+
+  // if a user is not logged in, we just want to update todos locally every time they change. otherwise, we just manage todos on the server
+  useEffect(() => {
+    if (!isLoggedIn)
+      localStorage.setItem('todos', JSON.stringify(todos))
+  }, [todos])
 
   useEffect(() => {
-    console.log('in our use effect and isLoggedIn is now: ', isLoggedIn)
     const verify_token = async () => {
       try {
         if (!token)
           logout()
         else {
           let res = await verifyToken(token)
-          console.log(token)
           return res.ok ? login(token) : logout()
         }
       } catch (error) {
@@ -65,32 +69,29 @@ function App() {
       // add our local todos, then fetch and set
       addTodo(newTodos).then(() => fetchTodos(token)).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
       // remove local todos to avoid this from happening again for a logged in user
-      localStorage.removeItem('todos')
+      localStorage.setItem('todos', JSON.stringify([]))
     }
     else
       // if no local todos, just fetch user todos
       fetchTodos(token).then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
   }
 
-  // this used to be handleLogout in our Profile component until we moved it into the parent. should we just move it back? Could avoid making context entirely
+  // handles logout
   let logout = (e=null) => {
-    console.log('in our logout')
-    e?.preventDefault()
+    // we only actually want to clear localStorage.todos if someone clicks a logout button
+    if (e) {
+      e.preventDefault()
+      localStorage.setItem('todos', JSON.stringify([]))
+      setTodos([])
+    }
     // remove localStorage values, and set todos to empty array
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.setItem('todos', JSON.stringify([]))
     // update state variables
     setToken('')
     setUser('')
-    setTodos([])
     setIsLoggedIn(false)
-    // grab our todos from localStorage, because user is not logged in
   }
-
-  // useEffect(() => {
-  //   fetchTodos().then(todos => setTodos(todos.sort((a,b) => a.index - b.index)))
-  // }, [])
 
   return (
     <div className="App">
@@ -99,7 +100,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Todos todos={todos} setTodos={setTodos} user={user} isLoggedIn={isLoggedIn}/>}/>
           <Route path='/login' element={ <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} login={login} token={token} setToken={setToken}/> }/>
-          <Route path='/profile' element={<Profile setIsLoggedIn={setIsLoggedIn} login={login} logout={logout}/>}/>
+          <Route path='/profile' element={<Profile logout={logout}/>}/>
         </Routes>
       </Router>
     </div>

@@ -30,18 +30,15 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
                 })
             // if not logged in, pull from localStorage and add task there
             else {
-                let localTodos = JSON.parse(localStorage.getItem('todos'))
-                localTodos.push(task)
-                localStorage.setItem('todos', JSON.stringify(localTodos))
                 setTodos([...todos, task])
             }
-
             setTask({...task, todo: ''})
         }
     }
 
     let completeHandler = e => {
         let updated = {}
+        // if the index matches the selected todo, update the completed value
         let completeUpdated = todos.map((todo, idx) => {
           if (idx == e.target.attributes.idx.value) {
             todo.completed = !todo.completed
@@ -49,11 +46,20 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
           }
           return todo
         })
-        updateTodos([updated]).then(() => setTodos(completeUpdated))
+        // if user is logged in, update in db
+        if (isLoggedIn)
+            updateTodos([updated]).then(res => {
+                if (res.ok)
+                    setTodos(completeUpdated)
+            })
+        // if not logged in, update locally
+        else
+            setTodos(completeUpdated)
     }
 
     let removeHandler = e => {
         let removeTarget = {}
+        // if the index of todo matches the selected for delete, remove it
         let removeUpdated = todos.filter((todo, idx) => {
           if (!(e.target.attributes.idx.value == idx)) {
             return true
@@ -62,13 +68,21 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
             return false
           }
         })
-        deleteTodo(removeTarget).then(()=>setTodos(removeUpdated))
+        // if logged in, update db
+        if (isLoggedIn)
+            deleteTodo(removeTarget).then( res =>{
+                if (res.ok)
+                    setTodos(removeUpdated)
+            })
+        // if not logged in update locally
+        else
+            setTodos(removeUpdated)
     }
 
     let editHandler = e => {
         let pressType = e.target.attributes.indic.value
         let edited = {}
-    
+        // if the index in todos matches the todo selected for edit, update edited value
         let updateEdited = todos.map((todo, idx) => {
           if (idx == e.target.attributes.idx.value) {
             todo.editing = !todo.editing
@@ -78,10 +92,19 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
           }
           return todo
         })
-        updateTodos([edited]).then(()=> {
-          setTodos(updateEdited)
-          setTask({...task, editValue: ''})
-        })
+        // if logged in, update db
+        if (isLoggedIn)
+            updateTodos([edited]).then( res => {
+                if (res.ok) {
+                    setTodos(updateEdited)
+                    setTask({...task, editValue: ''})
+                }
+            })
+        // if not logged in, only update locally
+        else {
+            setTodos(updateEdited)
+            setTask({...task, editValue: ''})
+        }
     }
 
     // start -- dragging functionality
@@ -109,9 +132,12 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
         // reset our references for a new drag
         dragItem.current = null
         dragOverItem.current = null
-        // update with our altered items, and update todoItems locally
-        console.log(updated)
-        updateTodos(updated).then(()=>setTodos(_todos))
+        // if logged in update with our altered items, then update locally
+        if (isLoggedIn)
+            updateTodos(updated).then(()=>setTodos(_todos))
+        // if not logged in, just update locally
+        else
+            setTodos(_todos)
     }
 
     // drag handlers
