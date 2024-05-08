@@ -1,6 +1,75 @@
+/* ------ begin boilerplate ------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: none;
+}
+
+html {
+  /* font-size: 62.5%; (62.5/100) * 16px = 10px */
+  font-size: 0.8vw;
+  -webkit-text-size-adjust: none; /* for iOS Safari */
+  text-size-adjust: none; /* for other mobile browsers */
+}
+p {
+  font-family: 'Times New Roman', Times, serif, 'Times New Roman', Times, serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+        scroll-behavior: smooth;
+  }
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+menu:not(article menu),
+ol:not(article ol),
+ul:not(article ul) {
+  list-style: none;
+}
+
+menu,
+ol,
+ul {
+  padding-left: 0;
+}
+
+article ol,
+article ul {
+  list-style-position: inside;
+}
+
+button,
+select,
+[type=radio],
+[type=submit],
+[type=checkbox] {
+  cursor: pointer;
+}
+
+body {
+  overflow: scroll;
+}
+
+/* ------ end boilerplate ------- */
+
 .App {
   display: flex;
   flex-direction: column;
+
+/* color variables */
+--main-lightest: white;
+--second-lightest: 
 }
 
 ul {
@@ -9,23 +78,85 @@ ul {
   list-style-type: none
 }
 
+.header-background {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-image: url('./images/header-top.svg');
+  background-position: top-left;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
 .header-nav {
   display: flex;
-  width: 50vw;
+  width: 100%;
+  height: 12em;
   margin: auto;
-  justify-content: space-between;
+  margin-top: 0px;
+  justify-content: space-around;
+  align-items: center;
+  align-items: center;
+  border: 3px solid red;
+}
+
+@font-face {
+  font-family: Knewave;
+  src: url('./fonts/Knewave-Regular.ttf');
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('./fonts/Roboto-Regular.ttf');
+}
+
+.crispytodo-title {
+  color: #FFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke-width: .2px;
+  -webkit-text-stroke-color: #000;
+  font-family: Knewave;
+  font-size: 4em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .header-nav-links {
-  width: 10vw;
+  width: 25vw;
+  height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  border: 3px solid green;
   justify-content: space-between;
 }
 
 .header-nav-links > * {
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.header-nav-text {
+  color: #FFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke-width: .2px;
+  -webkit-text-stroke-color: #000;
+  font-family: Roboto;
+  font-size: 4.5em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  background-image: url('./images/fried-chicken.svg');
+  background-repeat: no-repeat;
+  /* background-size: 80%; */
+  background-position: center;
+  height: 10vh;
+  width: 8vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 form {
@@ -139,5 +270,10 @@ form > button {
 
 .logout-container > * {
   margin-bottom: 2vh
+}
+
+.crispy-footer {
+  display: flex;
+  justify-content: center;
 }
 

@@ -7,6 +7,7 @@ import Navbar from './components/Navbar.js';
 import Login from './views/Login.js';
 import Profile from './views/Profile.js';
 import Todos from './views/Todos.js'
+import Footer from './components/Footer.js';
 
 import { fetchTodos } from './services/todosRequests.js'
 import { verifyToken, fetchUser } from './services/userRequests.js';
@@ -114,6 +115,7 @@ function App() {
           <Route path='/profile' element={<Profile user={user} logout={logout}/>}/>
         </Routes>
       </Router>
+      <Footer />
     </div>
   );
 }

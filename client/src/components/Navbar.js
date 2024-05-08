@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 
 export default function Navbar({ loggedIn, user }) {
   return (
-    <div className='header-nav'>
-          <div className='crispytodo-title'><h1>crispy 🍗</h1></div>
+    <>
+    <div className='header-background'></div>
+      <div className='header-nav'>
+        <div className='crispytodo-title'><h1>Crispy Todos</h1></div>
           <ul className='header-nav-links'>
-            <li><Link to='/'>todos</Link></li>
-            {loggedIn ? <li><Link to='/profile'>{user.username}</Link></li> : <li><Link to='/login'>login</Link></li>}
-          </ul>
-        </div>
+            <li className='header-nav-text'><Link to='/'>todos</Link></li>
+            {loggedIn ? <li className='header-nav-text'><Link to='/profile'>{user.username}</Link></li> : <li className='header-nav-text'><Link to='/login'>login</Link></li>}
+        </ul>
+      </div>
+    </>
   )
 }
