@@ -30,7 +30,6 @@ img {
 
 a {
   text-decoration: none;
-  color: white;
 }
 
 menu:not(article menu),
@@ -118,7 +117,7 @@ ul {
 .crispytodo-title {
   color: #FFF;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke-width: .01px;
+  -webkit-text-stroke-width: .001em;
   -webkit-text-stroke-color: #000;
   font-family: Knewave;
   font-size: 4em;
@@ -136,6 +135,7 @@ ul {
   justify-content: center;
   /* border: 3px solid green; */
   justify-content: space-between;
+  margin-top: 1.7vh;
 }
 
 .header-nav-links > * {
@@ -144,14 +144,6 @@ ul {
 }
 
 .header-nav-text {
-  color: #FFF;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: #000;
-  font-family: Roboto-Bold;
-  font-size: 5em;
-  font-style: normal;
-  line-height: normal;
   background-image: url('./images/fried-chicken-no-outline.svg');
   background-repeat: no-repeat;
   /* background-size: 80%; */
@@ -165,6 +157,18 @@ ul {
 
 .header-nav-text:hover {
   background-image: url('./images/fried-chicken.svg');
+}
+
+/* unique styling for our links */
+.header-nav-text > a {
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke-width: .03em;
+  -webkit-text-stroke-color: #000;
+  color: #FFF;
+  font-family: Roboto-Bold;
+  font-size: 5em;
+  font-style: normal;
+  line-height: normal;
 }
 
 .todo-input-container {
@@ -202,7 +206,7 @@ ul {
   background-position: center;
   background-repeat: no-repeat;
   width: 20%;
-  height: 10vh;
+  height: 12vh;
 }
 
 /* form {
@@ -276,28 +280,36 @@ form > button {
   margin-top: 4vh;
   padding: 1.5vh 0 1.5vh 0;
   width: 77vw;
-  border: 3px solid red;
+  /* border: 3px solid red; */
   border-radius: 40px;
 }
 
+/* made this stupid wrapper just for a gradient background */
+.todo-wrapper {
+  padding: 0.5px;
+  background: linear-gradient(90deg, #D1C663, #4433A2);
+  border-radius: 15px; /* slightly larger to accommodate the inner radius */
+  display: inline-block; /* or 'block', depending on your layout needs */
+  margin: 10px; /* Adjust as needed */
+}
+
 .todo-li {
-  /* border: 3px solid grey; */
-  border-image: linear-gradient(90deg, #D1C663, #4433A2) 1;
-  border-width: 3px;
-  border-radius: 12px;
-  border-style: solid;
+  border-radius: 13px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  margin: 10px;
+  margin: 5px;
   width: 70vw;
   cursor: pointer;
   background: white;
 }
 
 .todo-todo {
-  flex: 5
+  flex: 5;
+  font-family: Roboto-Regular;
+  font-size: 2.7rem;
+  padding-left: 4px;
 }
 
 .todo-button-container {
