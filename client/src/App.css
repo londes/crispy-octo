@@ -281,8 +281,11 @@ form > button {
 }
 
 .todo-li {
-  border: 2px solid grey;
+  /* border: 3px solid grey; */
+  border-image: linear-gradient(90deg, #D1C663, #4433A2) 1;
+  border-width: 3px;
   border-radius: 12px;
+  border-style: solid;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -290,6 +293,7 @@ form > button {
   margin: 10px;
   width: 70vw;
   cursor: pointer;
+  background: white;
 }
 
 .todo-todo {
