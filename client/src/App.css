@@ -30,6 +30,7 @@ img {
 
 a {
   text-decoration: none;
+  color: white;
 }
 
 menu:not(article menu),
@@ -68,8 +69,8 @@ body {
   flex-direction: column;
 
 /* color variables */
---main-lightest: white;
---second-lightest: 
+  --main-lightest: white;
+  --second-lightest: #E8E8E8;
 }
 
 ul {
@@ -97,8 +98,6 @@ ul {
   margin-top: 0px;
   justify-content: space-around;
   align-items: center;
-  align-items: center;
-  border: 3px solid red;
 }
 
 @font-face {
@@ -107,20 +106,26 @@ ul {
 }
 
 @font-face {
-  font-family: Roboto;
+  font-family: Roboto-Regular;
   src: url('./fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+  font-family: Roboto-Bold;
+  src: url('./fonts/Roboto-Bold.ttf');
 }
 
 .crispytodo-title {
   color: #FFF;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke-width: .2px;
+  -webkit-text-stroke-width: .01px;
   -webkit-text-stroke-color: #000;
   font-family: Knewave;
   font-size: 4em;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-align: center;
 }
 
 .header-nav-links {
@@ -129,7 +134,7 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid green;
+  /* border: 3px solid green; */
   justify-content: space-between;
 }
 
@@ -141,14 +146,13 @@ ul {
 .header-nav-text {
   color: #FFF;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke-width: .2px;
+  -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #000;
-  font-family: Roboto;
-  font-size: 4.5em;
+  font-family: Roboto-Bold;
+  font-size: 5em;
   font-style: normal;
-  font-weight: 400;
   line-height: normal;
-  background-image: url('./images/fried-chicken.svg');
+  background-image: url('./images/fried-chicken-no-outline.svg');
   background-repeat: no-repeat;
   /* background-size: 80%; */
   background-position: center;
@@ -159,7 +163,49 @@ ul {
   align-items: center;
 }
 
-form {
+.header-nav-text:hover {
+  background-image: url('./images/fried-chicken.svg');
+}
+
+.todo-input-container {
+  height: auto;
+  margin-top: 3vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.todo-form{
+  display: flex;
+  width: 50vw;
+  justify-content: space-between;
+  align-items: center;
+  height: 7em;
+  padding: 10px;
+}
+
+.todo-form > input {
+  /* all: unset; */
+  border-radius: 40px;
+  border: 2px solid black;
+  background: var(--second-lightest);
+  padding: 10px;
+  font-family: Roboto-Regular;
+  font-size: 3em;
+  flex: 1;
+}
+
+.todo-form > button {
+  background: none;
+  background-image: url('./images/deep-fryer.svg');
+  background-size: 7vw;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 20%;
+  height: 10vh;
+}
+
+/* form {
   margin: 20px auto 20px auto;
   width: 40vw;
   display: flex;
@@ -168,7 +214,6 @@ form {
 }
 
 form > * {
-  /* border: 1px solid green; */
   margin: 1vh;
 }
 
@@ -183,13 +228,11 @@ form > input {
 }
 
 .form-item > label {
-  /* border: 1px solid red; */
   margin-bottom: 1vh;
   margin-left: 1vw
 }
 
 .form-item > input {
-  /* border: 3px solid blue; */
   height: 3vh;
   width: 30vw;
   margin-left: auto;
@@ -207,7 +250,7 @@ form > button {
   margin: auto;
   margin-top: 1vh;
   width: 20vw;
-}
+} */
 
 .message {
   /* border: 2px solid green; */
@@ -230,7 +273,11 @@ form > button {
   justify-content: center;
   flex-direction: column;
   margin: auto;
-  padding-top: 2vh
+  margin-top: 4vh;
+  padding: 1.5vh 0 1.5vh 0;
+  width: 77vw;
+  border: 3px solid red;
+  border-radius: 40px;
 }
 
 .todo-li {

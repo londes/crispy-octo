@@ -148,10 +148,10 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
       
   return (
     <div>
-        <div className="input-container">
-            <form onSubmit={submitHandler}>
+        <div className="todo-input-container">
+            <form className="todo-form" onSubmit={submitHandler}>
                 <input indic='todo' placeholder='todo' onChange={changeHandler} value={task.todo}/>
-                <button className='todo-button' id='submit-button'>submit</button>
+                <button className='todo-button' id='submit-button'></button>
             </form>
         </div>
         <ul className="todo-container">
