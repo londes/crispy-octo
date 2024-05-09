@@ -99,7 +99,7 @@ export default function Login({ login, setIsLoggedIn, setToken }) {
                     </div>
                     <div className="form-item">
                         <label>password</label>
-                        <input name="password" value={formValues.password} onChange={changeHandler}/>
+                        <input name="password" type="password" value={formValues.password} onChange={changeHandler}/>
                     </div>
                     <button>login</button>
                     <div className="message">
@@ -113,36 +113,38 @@ export default function Login({ login, setIsLoggedIn, setToken }) {
         )
     else if (registerSelected)
         return (
-            <div className="login-register-container">
-                <form
-                    onSubmit={submitHandler}
-                    className="form-container"
-                    autoComplete='off'
-                >
-                    <div className="form-item">
-                        <label>username</label>
-                        <input name="username" value={formValues.username} onChange={changeHandler}/>
-                    </div>
-                    <div className="form-item">
-                        <label>email</label>
-                        <input name="email" value={formValues.email} onChange={changeHandler}/>
-                    </div>
-                    <div className="form-item">
-                        <label>password</label>
-                        <input name="password" value={formValues.password} onChange={changeHandler}/>
-                    </div>
-                    <div className="form-item">
-                        <label>verify password</label>
-                        <input name="password2" value={formValues.password2} onChange={changeHandler}/>
-                    </div>
-                    <button>register</button>
-                    <div className="message">
-                        <h4>{message}</h4>
-                    </div>
-                    <div className="login-register-text">
-                        <p>Return to <span className='register-text' onClick={()=>setRegisterSelected(false)}>login</span></p>
-                    </div>
-                </form>
+            <div className='todo-wrapper'>
+                <div className="login-register-container">
+                    <form
+                        onSubmit={submitHandler}
+                        className="form-container"
+                        autoComplete='off'
+                    >
+                        <div className="form-item">
+                            <label>username</label>
+                            <input name="username" value={formValues.username} onChange={changeHandler}/>
+                        </div>
+                        <div className="form-item">
+                            <label>email</label>
+                            <input name="email" value={formValues.email} onChange={changeHandler}/>
+                        </div>
+                        <div className="form-item">
+                            <label>password</label>
+                            <input name="password" type="password" value={formValues.password} onChange={changeHandler}/>
+                        </div>
+                        <div className="form-item">
+                            <label>verify password</label>
+                            <input name="password2" type="password" value={formValues.password2} onChange={changeHandler}/>
+                        </div>
+                        <button>register</button>
+                        <div className="message">
+                            <h4>{message}</h4>
+                        </div>
+                        <div className="login-register-text">
+                            <p>Return to <span className='register-text' onClick={()=>setRegisterSelected(false)}>login</span></p>
+                        </div>
+                    </form>
+                </div>
             </div>
         )
 }
