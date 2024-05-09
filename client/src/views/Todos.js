@@ -155,7 +155,7 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
             </form>
         </div>
         <ul className="todo-container">
-            {todos?.map((todo, idx) => <div className='todo-wrapper'><li className='todo-li' key={idx} index={idx} draggable onDragStart={(e) => onDragStart(e, idx)} onDragEnter={(e) => onDragEnter(e, idx)} onDragEnd={dragSortHandler} onDragOver={(e)=>e.preventDefault()}> 
+            {todos?.map((todo, idx) => <div className='todo-wrapper' key={idx}><li className='todo-li' key={idx} index={idx} draggable onDragStart={(e) => onDragStart(e, idx)} onDragEnter={(e) => onDragEnter(e, idx)} onDragEnd={dragSortHandler} onDragOver={(e)=>e.preventDefault()}> 
                 { todo.editing 
                     ? <>
                             <input className='todo-todo' indic='editValue' style={todo.completed ? styles.complete : styles.incomplete} onChange={changeHandler} placeholder={todo.todo} value={task.editValue} />

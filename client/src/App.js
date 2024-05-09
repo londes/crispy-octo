@@ -106,6 +106,7 @@ function App() {
   }
 
   return (
+    <>
     <div className="App">
       <Router>
         <Navbar loggedIn={isLoggedIn} user={user}/>
@@ -115,8 +116,9 @@ function App() {
           <Route path='/profile' element={<Profile user={user} logout={logout}/>}/>
         </Routes>
       </Router>
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 }
 
