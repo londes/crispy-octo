@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 
 import { addTodo, updateTodos, deleteTodo } from '../services/todosRequests.js'
+import Icon from '../components/Icon.js'
 
 export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
 
@@ -40,7 +41,7 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
         let updated = {}
         // if the index matches the selected todo, update the completed value
         let completeUpdated = todos.map((todo, idx) => {
-          if (idx == e.target.attributes.idx.value) {
+          if (idx == e.currentTarget.attributes.idx.value) {
             todo.completed = !todo.completed
             updated = todo
           }
@@ -61,7 +62,7 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
         let removeTarget = {}
         // if the index of todo matches the selected for delete, remove it
         let removeUpdated = todos.filter((todo, idx) => {
-          if (!(e.target.attributes.idx.value == idx)) {
+          if (!(e.currentTarget.attributes.idx.value == idx)) {
             return true
           } else {
             removeTarget = todo
@@ -80,11 +81,11 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
     }
 
     let editHandler = e => {
-        let pressType = e.target.attributes.indic.value
+        let pressType = e.currentTarget.attributes.indic.value
         let edited = {}
         // if the index in todos matches the todo selected for edit, update edited value
         let updateEdited = todos.map((todo, idx) => {
-          if (idx == e.target.attributes.idx.value) {
+          if (idx == e.currentTarget.attributes.idx.value) {
             todo.editing = !todo.editing
             if (pressType == 'done')
               todo.todo = task.editValue
@@ -160,16 +161,18 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
                     ? <>
                             <input className='todo-todo' indic='editValue' style={todo.completed ? styles.complete : styles.incomplete} onChange={changeHandler} placeholder={todo.todo} value={task.editValue} />
                             <div className='todo-button-container'>
-                                <button indic='cancel' className='todo-button' onClick={editHandler} idx={idx}>cancel</button>
-                                <button indic='done' className='todo-button' onClick={editHandler} idx={idx}>done</button>
+                                <button indic='cancel' className='todo-button-text' onClick={editHandler} idx={idx}>cancel</button>
+                                <button indic='done' className='todo-button-text' onClick={editHandler} idx={idx}>done</button>
                             </div>
                     </>
                     : <>
                         <div className='todo-todo' style={todo.completed ? styles.complete : styles.incomplete}>{todo.todo}</div>
                         <div className='todo-button-container'>
-                            <button indic='edit' className='todo-button' onClick={editHandler} idx={idx}>edit</button>
-                            <button className='todo-button' onClick={completeHandler} idx={idx}>{todo.completed ? 'incomplete' : 'complete'}</button>
-                            <button className='todo-button' onClick={removeHandler} idx={idx}>remove</button>
+                            <button indic='edit' className='todo-button' onClick={editHandler} idx={idx}>
+                                <Icon name='edit' alt='edit' className='todo-icon'/>
+                            </button>
+                            <button className='todo-button' onClick={completeHandler} idx={idx}>{todo.completed ? <Icon name='checked' alt='incomplete' className='todo-icon'/> : <Icon name='check-mark' alt='incomplete' className='todo-icon'/>}</button>
+                            <button className='todo-button' onClick={removeHandler} idx={idx}><Icon name='remove' alt='remove' className='todo-icon'/></button>
                         </div>
                     </>
                 }

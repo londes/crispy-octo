@@ -87,33 +87,35 @@ export default function Login({ login, setIsLoggedIn, setToken }) {
 
     if (!registerSelected)
         return (
-            <div className="login-register-container">
-                <form
-                    onSubmit={submitHandler}
-                    className="form-container"
-                    autoComplete="off"
-                >
-                    <div className="form-item">
-                        <label>username or email</label>
-                        <input name="username_email" value={formValues.username_email} onChange={changeHandler}/>
-                    </div>
-                    <div className="form-item">
-                        <label>password</label>
-                        <input name="password" type="password" value={formValues.password} onChange={changeHandler}/>
-                    </div>
-                    <button>login</button>
-                    <div className="message">
-                        <h4>{message}</h4>
-                    </div>
-                    <div className="login-register-text">
-                        <p>Don't have an account? Please <span className='register-text' onClick={()=>setRegisterSelected(true)}>register</span></p>
-                    </div>
-                </form>
+            <div className='login-register-profile-wrapper'>
+                <div className="login-register-container">
+                    <form
+                        onSubmit={submitHandler}
+                        className="form-container"
+                        autoComplete="off"
+                    >
+                        <div className="form-item">
+                            <label>username or email</label>
+                            <input name="username_email" value={formValues.username_email} onChange={changeHandler}/>
+                        </div>
+                        <div className="form-item">
+                            <label>password</label>
+                            <input name="password" type="password" value={formValues.password} onChange={changeHandler}/>
+                        </div>
+                        <button>login</button>
+                        <div className="message">
+                            <h4>{message}</h4>
+                        </div>
+                        <div className="login-register-text">
+                            <p>Don't have an account? Please <span className='register-text' onClick={()=>setRegisterSelected(true)}>register</span></p>
+                        </div>
+                    </form>
+                </div>
             </div>
         )
     else if (registerSelected)
         return (
-            <div className='todo-wrapper'>
+            <div className='login-register-profile-wrapper'>
                 <div className="login-register-container">
                     <form
                         onSubmit={submitHandler}

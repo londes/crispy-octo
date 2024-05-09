@@ -1,15 +1,24 @@
 {
   "files": {
-    "main.css": "/static/css/main.952f061e.css",
-    "main.js": "/static/js/main.16b9840c.js",
+    "main.css": "/static/css/main.364f2e4e.css",
+    "main.js": "/static/js/main.f10b2314.js",
     "static/js/592.03e794f0.chunk.js": "/static/js/592.03e794f0.chunk.js",
+    "static/media/header-top.svg": "/static/media/header-top.e6b0e294917be18910ba.svg",
+    "static/media/Roboto-Italic.ttf": "/static/media/Roboto-Italic.87f3afe16a8c3c370634.ttf",
+    "static/media/Roboto-Regular.ttf": "/static/media/Roboto-Regular.fc2b5060f7accec5cf74.ttf",
+    "static/media/Roboto-Bold.ttf": "/static/media/Roboto-Bold.f80816a5455d171f948d.ttf",
+    "static/media/Knewave-Regular.ttf": "/static/media/Knewave-Regular.1db5694b7a2fc23ca86b.ttf",
+    "static/media/fried-chicken.svg": "/static/media/fried-chicken.3b635906d294f4022b03.svg",
+    "static/media/fried-chicken-no-outline.svg": "/static/media/fried-chicken-no-outline.d99288eaeaa267e2bd6d.svg",
+    "static/media/deep-fryer.svg": "/static/media/deep-fryer.c7bb2afcffc4136077a2.svg",
+    "static/media/profile-user.svg": "/static/media/profile-user.2ab6e48325704cf34a4c.svg",
     "index.html": "/index.html",
-    "main.952f061e.css.map": "/static/css/main.952f061e.css.map",
-    "main.16b9840c.js.map": "/static/js/main.16b9840c.js.map",
+    "main.364f2e4e.css.map": "/static/css/main.364f2e4e.css.map",
+    "main.f10b2314.js.map": "/static/js/main.f10b2314.js.map",
     "592.03e794f0.chunk.js.map": "/static/js/592.03e794f0.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.952f061e.css",
-    "static/js/main.16b9840c.js"
+    "static/css/main.364f2e4e.css",
+    "static/js/main.f10b2314.js"
   ]
 }

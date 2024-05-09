@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function Profile({ user, logout }) {
+export default function Profile({ user, logout, isLoggedIn }) {
 
     let navigate = useNavigate()
 
@@ -13,10 +13,15 @@ export default function Profile({ user, logout }) {
     }
 
     return (
-    <div className='logout-container'>
-        <div>{user.username}</div>
-        <div>{user.email}</div>
-        <button onClick={profileLogout}>logout</button>
+    isLoggedIn 
+    ? <div className='login-register-container'>
+        <div className='logout-container'>
+            <div className='profile-picture'></div>
+            <div>{user.username}</div>
+            <div>{user.email}</div>
+            <button onClick={profileLogout}>logout</button>
+        </div>
     </div>
+    : <></>
 )
 }

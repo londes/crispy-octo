@@ -113,7 +113,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Todos todos={todos} setTodos={setTodos} user={user} isLoggedIn={isLoggedIn}/>}/>
           <Route path='/login' element={ <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} login={login} token={token} setToken={setToken}/> }/>
-          <Route path='/profile' element={<Profile user={user} logout={logout}/>}/>
+          <Route path='/profile' element={<Profile user={user} logout={logout} isLoggedIn={isLoggedIn}/>}/>
         </Routes>
       </Router>
     </div>
