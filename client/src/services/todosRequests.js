@@ -71,6 +71,3 @@ async function postToTodos(url='', data = {}) {
     })
     return res.json()
 }
-
-
-
