@@ -8,7 +8,6 @@
 }
 
 html, body {
-  /* font-size: 62.5%; (62.5/100) * 16px = 10px */
   font-size: 0.5vw;
   -webkit-text-size-adjust: none; /* for iOS Safari */
   text-size-adjust: none; /* for other mobile browsers */
