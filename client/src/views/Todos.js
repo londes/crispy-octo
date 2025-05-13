@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 
 import { addTodo, updateTodos, deleteTodo } from '../services/todosRequests.js'
 import Icon from '../components/Icon.js'
@@ -112,6 +112,43 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
     // save reference for dragged item
     let dragItem = useRef(null)
     let dragOverItem = useRef(null)
+    let scrollInterval = useRef(null)
+    let scrollSpeed = 100 // pixels per scroll
+
+    // handle auto-scrolling during drag
+    const handleDragScroll = (e) => {
+        const viewportHeight = window.innerHeight
+        const scrollThreshold = 300 // pixels from top/bottom to trigger scroll
+        const mouseY = e.clientY
+
+        // Clear any existing scroll interval
+        if (scrollInterval.current) {
+            clearInterval(scrollInterval.current)
+            scrollInterval.current = null
+        }
+
+        // Scroll up if near top
+        if (mouseY < scrollThreshold) {
+            scrollInterval.current = setInterval(() => {
+                window.scrollBy(0, -scrollSpeed)
+            }, 10) // ~60fps
+        }
+        // Scroll down if near bottom
+        else if (mouseY > viewportHeight - scrollThreshold) {
+            scrollInterval.current = setInterval(() => {
+                window.scrollBy(0, scrollSpeed)
+            }, 10)
+        }
+    }
+
+    // Clean up scroll interval when drag ends
+    const handleDragEnd = () => {
+        if (scrollInterval.current) {
+            clearInterval(scrollInterval.current)
+            scrollInterval.current = null
+        }
+        dragSortHandler()
+    }
 
     // handle sorting on drag and drop
     let dragSortHandler = () => {
@@ -142,8 +179,23 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
     }
 
     // drag handlers
-    let onDragStart = (e, idx) => dragItem.current = idx
+    let onDragStart = (e, idx) => {
+        dragItem.current = idx
+        // Add drag scroll handler
+        document.addEventListener('dragover', handleDragScroll)
+    }
+
     let onDragEnter = (e, idx) => dragOverItem.current = idx
+
+    // Clean up event listener when component unmounts
+    useEffect(() => {
+        return () => {
+            document.removeEventListener('dragover', handleDragScroll)
+            if (scrollInterval.current) {
+                clearInterval(scrollInterval.current)
+            }
+        }
+    }, [])
 
     // end -- dragging functionality
       
@@ -156,7 +208,7 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
             </form>
         </div>
         <ul className="todo-container">
-            {todos?.map((todo, idx) => <div className='todo-wrapper' key={idx}><li className='todo-li' key={idx} index={idx} draggable onDragStart={(e) => onDragStart(e, idx)} onDragEnter={(e) => onDragEnter(e, idx)} onDragEnd={dragSortHandler} onDragOver={(e)=>e.preventDefault()}> 
+            {todos?.map((todo, idx) => <div className='todo-wrapper' key={idx}><li className='todo-li' key={idx} index={idx} draggable onDragStart={(e) => onDragStart(e, idx)} onDragEnter={(e) => onDragEnter(e, idx)} onDragEnd={handleDragEnd} onDragOver={(e)=>e.preventDefault()}> 
                 { todo.editing 
                     ? <>
                             <input className='todo-todo' indic='editValue' style={todo.completed ? styles.complete : styles.incomplete} onChange={changeHandler} placeholder={todo.todo} value={task.editValue} />
