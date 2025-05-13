@@ -89,6 +89,12 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
             todo.editing = !todo.editing
             if (pressType == 'done')
               todo.todo = task.editValue
+            else if (pressType == 'edit') {
+              // Set the editValue to the current todo text when starting to edit
+              console.log(todo.todo)
+              setTask({...task, editValue: todo.todo})
+              console.log(todo.todo)
+            }
             edited = todo
           }
           return todo
@@ -113,12 +119,12 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
     let dragItem = useRef(null)
     let dragOverItem = useRef(null)
     let scrollInterval = useRef(null)
-    let scrollSpeed = 100 // pixels per scroll
+    let scrollSpeed = 150 // pixels per scroll
 
     // handle auto-scrolling during drag
     const handleDragScroll = (e) => {
         const viewportHeight = window.innerHeight
-        const scrollThreshold = 300 // pixels from top/bottom to trigger scroll
+        const scrollThreshold = 150 // pixels from top/bottom to trigger scroll
         const mouseY = e.clientY
 
         // Clear any existing scroll interval
@@ -131,13 +137,13 @@ export default function TodoList({ todos, setTodos, user, isLoggedIn }) {
         if (mouseY < scrollThreshold) {
             scrollInterval.current = setInterval(() => {
                 window.scrollBy(0, -scrollSpeed)
-            }, 10) // ~60fps
+            }, 8) // ~125fps
         }
         // Scroll down if near bottom
         else if (mouseY > viewportHeight - scrollThreshold) {
             scrollInterval.current = setInterval(() => {
                 window.scrollBy(0, scrollSpeed)
-            }, 10)
+            }, 8)
         }
     }
 
